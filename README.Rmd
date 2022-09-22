@@ -66,6 +66,7 @@ par(mfrow=c(1,1))
 In particular, we will now consider the first derivative of the spectrometric curve which we denote $X$.
 
 ```{r X(t), echo=FALSE, fig.width=16, fig.height=6}
+par(mar=c(5.1, 10.1, 4.1, 10.1))
 matplot(absorp1$argvals, t(absorp1$data), type = "l", lty = 1,
         xlab = "Wavelength (nm)", ylab = "X(t)") 
 ```
@@ -216,7 +217,7 @@ intersect(fd1$outpoint[fd1$outpoint <= length(indices_tecdatos)], atipicos_CUADR
 
 Curves corresponding to atypical residuals from FQM are displayed below in red.
 
-```{r robust est atypical curves, echo=FALSE, fig.width=16, fig.height=3}
+```{r robust est atypical curves, echo=FALSE, fig.width=16, fig.height=6}
 ######################################
 # PLOT THE CURVES CORRESPONDING TO 
 # ATYPICAL Residuals from FQM
@@ -231,7 +232,7 @@ matplot(absorp1$argvals, t(absorp1$data[atipicos_CUADRA_tecdatos,]), type = "l",
 
 Beta parameter from FLM fit is displayed below.
 
-```{r robust est beta FLM, echo=FALSE, fig.height=3, fig.width=16}
+```{r robust est beta FLM, echo=FALSE, fig.height=6, fig.width=16}
 ##############################################
 ## PLOT BETA FROM FLM FIT
 ############################################## 
@@ -280,17 +281,16 @@ par(mfrow=c(1,1))
 
 
 Residuals vs predicted, both for FLM and FQM are displayed below.
+```{r robust est6hide, echo=FALSE, fig.show="hide"}
+bb_L=boxplot(residuos_ROB_LINEAL_tecdatos)
+bb_C=boxplot(residuos_ROB_CUADRA_tecdatos)
+```
 
 ```{r robust est6, echo=FALSE, fig.height=6, fig.width=16}
 ##############################################
 ## PLOT residuals vs predicted
 ############################################## 
-
 par(mfrow=c(1,2))
-
-bb_L=boxplot(residuos_ROB_LINEAL_tecdatos)
-bb_C=boxplot(residuos_ROB_CUADRA_tecdatos)
-
 plot( predichos_ROB_LINEAL, residuos_ROB_LINEAL_tecdatos, xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3, main="FLM")
  abline(h=bb_L$stats[1,1],col="red")
 abline(h=bb_L$stats[5,1],col="red")
