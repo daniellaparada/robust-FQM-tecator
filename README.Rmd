@@ -595,8 +595,47 @@ legend(1000, -200, legend=c("CL", "ROB", "CL without out"),
 par(mfrow=c(1,1))
 ```
 
-
-
-
 We now show surface differences between
+
+```{r dif suf CL ROB, echo=FALSE, fig.height=6, fig.width=16}
+par(mar=c(5.1, 24.1, 4.1, 24.1))
+
+
+DIF_CL_ROB <- gamma_CL_CUADRA - gamma_rob_CUADRA
+DIF_CL_sin_out_ROB <- gamma_CL_CUADRA_sin_out- gamma_rob_CUADRA
+
+eme_D=min(c(DIF_CL_ROB,DIF_CL_sin_out_ROB))
+EME_D=max(c(DIF_CL_ROB,DIF_CL_sin_out_ROB))
+
+
+
+donde_D=seq(eme_D ,EME_D  ,length=ene.col)
+
+wireframe(DIF_CL_ROB ,scales = list(arrows = FALSE),   
+	xlab="t",ylab="s",zlab=" ",   cex=1.2,zlim=c(eme_D ,EME_D),
+	row.values=tecdatos$t,column.values=tecdatos$t,drape = TRUE,
+  	colorkey = TRUE,aspect = c(1,1),screen=list(z= 30,x=- 70),
+ 	at=donde_D, col.regions=colores, main="Difference between estimated surfaces: CL and ROB ") 
+
+
+wireframe(DIF_CL_sin_out_ROB ,scales = list(arrows = FALSE),   
+	xlab="t",ylab="s",zlab=" ",   cex=1.2,zlim=c(eme_D ,EME_D),
+	row.values=tecdatos$t,column.values=tecdatos$t,drape = TRUE,
+  	colorkey = TRUE, aspect = c(1,1),screen=list(z= 30,x=- 70),
+	at=donde_D, col.regions=colores, main="Difference between estimated surfaces: CL without out and ROB") 
+
+
+eme1=min(DIF_CL_sin_out_ROB)
+EME1= max(DIF_CL_sin_out_ROB)
+
+
+donde1=seq(eme1 ,EME1  ,length=ene.col)
+
+wireframe(DIF_CL_sin_out_ROB ,scales = list(arrows = FALSE),   
+	xlab="t",ylab="s",zlab=" ",   cex=1.2,zlim=c(eme1 ,EME1),
+	row.values=tecdatos$t,column.values=tecdatos$t,drape = TRUE,
+  	colorkey = TRUE, aspect = c(1,1),screen=list(z= 30,x=- 70),
+	at=donde1, col.regions=colores, main="Difference between estimated surfaces: CL without out and ROB (zoomed)") 
+ 
+```
 
