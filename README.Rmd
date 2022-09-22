@@ -288,12 +288,12 @@ plot(tecdatos$t, beta_rob_CUADRA  , type = "l", lwd=3, xlab = "Wavelength", pch 
      col = "tomato", ylab = "")
 points(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3, pch = 10,
      col = "steelblue")
-legend(1000, -200, legend=c(expression(hat(beta)[LIN]), expression(hat(beta)[QUAD])),
+legend(1000, -200, legend=c("LIN", "QUAD"),
        col=c("steelblue", "tomato"), lty=1, lwd=3, cex=1, bty="n")
 ```
 
 
-Residuals vs predicted, both for FLM and FQM are displayed below. 
+Residuals vs predicted, both for FLM and FQM in the robust fit are displayed below. 
 
 ```{r robust est6hide, echo=FALSE, fig.show="hide"}
 bb_L=boxplot(residuos_ROB_LINEAL_tecdatos)
@@ -403,6 +403,7 @@ plot(tecdatos$t, beta_CL_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 10
 	 ylim=c(min(c(beta_CL_LINEAL,beta_rob_LINEAL)), max(c(beta_CL_LINEAL,beta_rob_LINEAL))))
 
 ```
+
 We can now compare $\beta$ estimates in FLM between classic and robust fit.
 
 ```{r robvsclas est beta FLM, echo=FALSE, fig.height=6, fig.width=16}
@@ -449,7 +450,7 @@ wireframe(gamma_CL_CUADRA,scales = list(arrows = FALSE),
   		colorkey = TRUE,at=donde, col.regions=colores)
 ```
 
-We can now compare $\beta$ estimates in FQM between classic and robust fit.
+We can now compare $\beta$ estimates in FQM between classic (CL) and robust (ROB) fit.
 
 ```{r robvsclas est beta FQM, echo=FALSE, fig.height=6, fig.width=16}
 ##############################################
@@ -468,6 +469,125 @@ legend(1000, -200, legend=c("CL","ROB"),
        col=c("tomato", "steelblue"), lty=1, lwd=3, cex=1, bty="n")
 
 ```
+Residuals vs predicted, both for FLM and FQM in the classic fit are displayed below. 
 
 
+```{r classic est6, echo=FALSE, fig.height=6, fig.width=16}
+##############################################
+## PLOT residuals vs predicted
+############################################## 
+par(mfrow=c(1,2))
+plot( predichos_CL_LINEAL,residuos_CL_LINEAL_tecdatos, xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3,
+      main="FLM")
+
+plot( predichos_CL_CUADRA, residuos_CL_CUADRA_tecdatos,
+xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3, main="FQM")
+par(mfrow=c(1,1))
+```
+
+# Analysis without outliers
+
+We now repeat the classical analysis, both for FLM and FQM, without the outliers that have been identified in the residual boxplot from the robust FQM fit. We choose 4 principal directions whiich explain more than 97% of the variability.
+
+```{r echo=FALSE}
+############################ 
+## Data without outliers
+############################
+
+tecdatos_sin_out <- submuestra(indices_tecdatos[-atipicos_CUADRA_tecdatos], covariable = covariable)
+
+
+#######################################
+## CLASSICAL ESTIMATOR WITHOUT OULTIERS
+## FLM
+#######################################
+
+est_CL_LINEAL_sin_out <- estimar(y= tecdatos_sin_out$y,xcenter= tecdatos_sin_out$x,  ttt= tecdatos_sin_out$t, 
+				ajuste='lineal', freq=freq,  cov_type='cl',  fLoss='ls',cterho=3.443689, 
+				nresamp=5000, varexp=varexp) 
+
+est_CL_LINEAL_sin_out$porcentaje
+#0.9774696
+
+#####################################################
+# Store parameters and compute predicted values
+######################################################
+
+
+beta_CL_LINEAL_sin_out <- est_CL_LINEAL_sin_out$beta 
+phies_CL_LINEAL_sin_out <- est_CL_LINEAL_sin_out$autofun
+
+coef_CL_LINEAL_sin_out <-   tecdatos_sin_out$x %*% phies_CL_LINEAL_sin_out * dt_tecdatos
+
+predichos_CL_LINEAL_sin_out <- est_CL_LINEAL_sin_out$alfa + coef_CL_LINEAL_sin_out%*% est_CL_LINEAL_sin_out$slope_coef 
+
+
+######################################
+## CLASSICAL ESTIMATOR WITHOUT OULTIERS
+## FQM
+#######################################
+
+est_CL_CUADRA_sin_out <- estimar(y= tecdatos_sin_out$y,xcenter= tecdatos_sin_out$x,  
+				ttt= tecdatos_sin_out$t, 
+				ajuste='quadra', freq=freq,  cov_type='cl',  
+				fLoss='ls',cterho=3.443689, nresamp=5000, varexp=varexp) 
+
+######################################################
+# Store parameters and compute predicted values
+######################################################
+
+beta_CL_CUADRA_sin_out <- est_CL_CUADRA_sin_out$beta
+gamma_CL_CUADRA_sin_out <- est_CL_CUADRA_sin_out$gamma
+phies_CL_sin_out <- est_CL_CUADRA_sin_out$autofun
+ 
+coef_CL_CUADRA_sin_out <-   tecdatos_sin_out$x %*% phies_CL_sin_out * dt_tecdatos
+
+predichos_CL_CUADRA_sin_out <- est_CL_CUADRA_sin_out$alfa + coef_CL_CUADRA_sin_out%*% est_CL_CUADRA_sin_out$slope_coef + 
+diag(coef_CL_CUADRA_sin_out%*% est_CL_CUADRA_sin_out$gama_coef%*% t(coef_CL_CUADRA_sin_out))
+
+
+######################################################
+## RESIDUALS FROM THE CLASSICAL FIT WITHOUT OUTLIERS
+###################################################### 
+
+residuos_CL_CUADRA_tecdatos_sin_out <- tecdatos_sin_out$y - predichos_CL_CUADRA_sin_out
+
+residuos_CL_LINEAL_tecdatos_sin_out <- tecdatos_sin_out$y - predichos_CL_LINEAL_sin_out
+
+```
+
+Plots of the estimated parameters with and wothout outliers.
+
+```{r plotscompar, echo=FALSE, fig.height=6, fig.width=16}
+par(mar=c(5.1, 24.1, 4.1, 24.1))
+plot( predichos_CL_CUADRA_sin_out, residuos_CL_CUADRA_tecdatos_sin_out,
+xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3)
+
+plot( predichos_CL_LINEAL_sin_out,residuos_CL_LINEAL_tecdatos_sin_out, xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3)
+
+plot(tecdatos$t, beta_CL_CUADRA, type = "l",  lwd=3,xlab = "Wavelength", pch = 10,
+     col = "tomato", ylab = expression(hat(beta)),
+     ylim=c(min(c(beta_CL_CUADRA,beta_rob_CUADRA)), max(c(beta_CL_CUADRA,beta_rob_CUADRA))))
+ 
+lines(tecdatos$t, beta_rob_CUADRA, type = "l", lwd=3,xlab = "Wavelength", pch = 10,
+     col = "blue")
+ 
+lines(tecdatos$t, beta_CL_CUADRA_sin_out, type = "l", lty=2,lwd=4,xlab = "Wavelength", pch = 10,
+     col = "pink")
+
+plot(tecdatos$t, beta_CL_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 10,
+     col = "red", ylab = expression(hat(beta)),
+	 ylim=c(min(c(beta_CL_LINEAL,beta_rob_LINEAL)), max(c(beta_CL_LINEAL,beta_rob_LINEAL))))
+ 
+lines(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 10,
+     col = "blue")
+
+lines(tecdatos$t, beta_CL_LINEAL_sin_out, type = "l", lty=2,lwd=4,xlab = "Wavelength", pch = 10,
+     col = "pink")
+```
+
+
+
+
+We now show surface differences between
 

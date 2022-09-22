@@ -106,7 +106,8 @@ Estimates comparison *β* from FLM and FQM.
 
 ![](README_files/figure-markdown_strict/robust%20est%20betas2-1.png)
 
-Residuals vs predicted, both for FLM and FQM are displayed below.
+Residuals vs predicted, both for FLM and FQM in the robust fit are
+displayed below.
 
 ![](README_files/figure-markdown_strict/robust%20est6-1.png)
 
@@ -120,6 +121,7 @@ explain more than 97% of the total variability as seen below.
 *β* curve estimated from FLM fit is displayed below.
 
 ![](README_files/figure-markdown_strict/classic%20est%20beta%20FLM-1.png)
+
 We can now compare *β* estimates in FLM between classic and robust fit.
 
 ![](README_files/figure-markdown_strict/robvsclas%20est%20beta%20FLM-1.png)
@@ -128,6 +130,26 @@ below.
 
 ![](README_files/figure-markdown_strict/classic%20est%20beta%20gamma%20FQM-1.png)![](README_files/figure-markdown_strict/classic%20est%20beta%20gamma%20FQM-2.png)
 
-We can now compare *β* estimates in FQM between classic and robust fit.
+We can now compare *β* estimates in FQM between classic (CL) and robust
+(ROB) fit.
 
 ![](README_files/figure-markdown_strict/robvsclas%20est%20beta%20FQM-1.png)
+Residuals vs predicted, both for FLM and FQM in the classic fit are
+displayed below.
+
+![](README_files/figure-markdown_strict/classic%20est6-1.png)
+
+# Analysis without outliers
+
+We now repeat the classical analysis, both for FLM and FQM, without the
+outliers that have been identified in the residual boxplot from the
+robust FQM fit. We choose 4 principal directions whiich explain more
+than 97% of the variability.
+
+    ## [1] 0.9774696
+
+Plots of the estimated parameters with and wothout outliers.
+
+![](README_files/figure-markdown_strict/plotscompar-1.png)![](README_files/figure-markdown_strict/plotscompar-2.png)![](README_files/figure-markdown_strict/plotscompar-3.png)![](README_files/figure-markdown_strict/plotscompar-4.png)
+
+We now show surface differences between
