@@ -43,22 +43,29 @@ are displayed below.
 
 ![](README_files/figure-markdown_strict/functional%20boxplots-1.png)![](README_files/figure-markdown_strict/functional%20boxplots-2.png)
 
-# Robust Estimator under a Functional Linear/Quadratic Model
+# Robust Estimators under a Functional Linear/Quadratic Model
 
 FLM:
 *y* = *α*<sub>0</sub> + ⟨*X*, *β*<sub>0</sub>⟩ + *ϵ*
 
 FQM:
-*y* = *α*<sub>0</sub> + ⟨*X*, *β*<sub>0</sub>⟩ + *ϵ*
+*y* = *α*<sub>0</sub> + ⟨*X*, *β*<sub>0</sub>⟩ + ⟨*X*, *Υ*<sub>0</sub>*X*⟩ + *ϵ*
 
 In both cases, we choose 4 principal directions which explain more than
-97% of the total variability.
+98% of the total variability as seen below.
 
     ## [1] 0.9841754
 
     ## [1] 0.9841754
 
-![](README_files/figure-markdown_strict/robust%20est-1.png)![](README_files/figure-markdown_strict/robust%20est-2.png)
+Residuals boxplots both for FLM and FQM are displayed below.
+
+![](README_files/figure-markdown_strict/robust%20est3-1.png)![](README_files/figure-markdown_strict/robust%20est3-2.png)
+
+In both cases, we show the common outliers between residuals boxplots
+and functional boxplots.
+
+![](README_files/figure-markdown_strict/robust%20est%20resbox-1.png)![](README_files/figure-markdown_strict/robust%20est%20resbox-2.png)
 
     ## [1] "The outliers from the robust linear fit are:"
 
@@ -78,26 +85,23 @@ In both cases, we choose 4 principal directions which explain more than
 
     ## [1]  35 140
 
-Curves corresponding to atypical residuals from FQM.
+Curves corresponding to atypical residuals from FQM are displayed below
+in red.
 
 ![](README_files/figure-markdown_strict/robust%20est2-1.png)
 
-Residuals boxplots from FLM and FQM.
-![](README_files/figure-markdown_strict/robust%20est3-1.png)![](README_files/figure-markdown_strict/robust%20est3-2.png)
+Beta parameter from FLM fit is displayed below.
 
-Beta from FLM fit.
-![](README_files/figure-markdown_strict/robust%20est4-1.png)![](README_files/figure-markdown_strict/robust%20est4-2.png)
+![](README_files/figure-markdown_strict/robust%20est4-1.png)
 
-    ## [1] -403
+Beta and gamma parameters from FQM fit are displayed below.
 
-![](README_files/figure-markdown_strict/robust%20est4-3.png)![](README_files/figure-markdown_strict/robust%20est4-4.png)![](README_files/figure-markdown_strict/robust%20est4-5.png)![](README_files/figure-markdown_strict/robust%20est4-6.png)![](README_files/figure-markdown_strict/robust%20est4-7.png)
-
-Beta and gamma from FQM fit.
 ![](README_files/figure-markdown_strict/robust%20est5-1.png)
 
     ## [1] -403
 
 ![](README_files/figure-markdown_strict/robust%20est5-2.png)
 
-Residuals vs predicted.
+Residuals vs predicted, both for FLM and FQM are displayed below.
+
 ![](README_files/figure-markdown_strict/robust%20est6-1.png)![](README_files/figure-markdown_strict/robust%20est6-2.png)![](README_files/figure-markdown_strict/robust%20est6-3.png)![](README_files/figure-markdown_strict/robust%20est6-4.png)
