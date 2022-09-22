@@ -65,7 +65,7 @@ par(mfrow=c(1,1))
 
 In particular, we will now consider the first derivative of the spectrometric curve which we denote $X$.
 
-```{r X(t), echo=FALSE, fig.height=6, fig.width=8}
+```{r X(t), echo=FALSE, fig.height=6, fig.width=6}
 matplot(absorp1$argvals, t(absorp1$data), type = "l", lty = 1,
         xlab = "Wavelength (nm)", ylab = "X(t)") 
 ```
@@ -184,7 +184,7 @@ par(mfrow=c(1,1))
 
 In both cases, we show the common outliers between residuals boxplots and functional boxplots.
 
-```{r robust est resboxhide, results='hide', cache=FALSE, results=FALSE, warning=FALSE, comment=FALSE, message=FALSE, echo=FALSE}
+```{r robust est resboxhide, echo = FALSE, eval = TRUE, results = "hide"}
 ##########################################
 # Residuals boxplots and atypical data
 #########################################
@@ -216,7 +216,7 @@ intersect(fd1$outpoint[fd1$outpoint <= length(indices_tecdatos)], atipicos_CUADR
 
 Curves corresponding to atypical residuals from FQM are displayed below in red.
 
-```{r robust est atypical curves, echo=FALSE, fig.height=6, fig.width=8}
+```{r robust est atypical curves, echo=FALSE, fig.height=6, fig.width=6}
 ######################################
 # PLOT THE CURVES CORRESPONDING TO 
 # ATYPICAL Residuals from FQM
@@ -231,7 +231,7 @@ matplot(absorp1$argvals, t(absorp1$data[atipicos_CUADRA_tecdatos,]), type = "l",
 
 Beta parameter from FLM fit is displayed below.
 
-```{r robust est beta FLM, echo=FALSE, fig.height=6, fig.width=8}
+```{r robust est beta FLM, echo=FALSE, fig.height=6, fig.width=6}
 ##############################################
 ## PLOT BETA FROM FLM FIT
 ############################################## 
@@ -241,7 +241,7 @@ plot(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 1
 
 Beta and gamma parameters from FQM fit are displayed below.
 
-```{r robust est beta gamma FQM, echo=FALSE, fig.height=6, fig.width=8}
+```{r robust est beta gamma FQM, echo=FALSE, fig.height=6, fig.width=6}
 ##############################################
 ## PLOT BETA AND GAMMA FROM FQM FIT
 ############################################## 
@@ -255,7 +255,7 @@ colores=rainbow(ene.col, s = 1, v = 1, start = 0, end = max(1, ene.col - 1)/ene.
 eme= min(gamma_rob_CUADRA)
 EME= max(gamma_rob_CUADRA)
 
-floor(eme)
+#floor(eme)
 
 donde=seq(eme , EME,length=ene.col)
 
@@ -281,7 +281,7 @@ par(mfrow=c(1,1))
 
 Residuals vs predicted, both for FLM and FQM are displayed below.
 
-```{r robust est6, echo=FALSE, fig.height=6, fig.width=8}
+```{r robust est6, echo=FALSE, fig.height=6, fig.width=16}
 ##############################################
 ## PLOT residuals vs predicted
 ############################################## 

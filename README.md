@@ -100,11 +100,7 @@ Beta parameter from FLM fit is displayed below.
 
 Beta and gamma parameters from FQM fit are displayed below.
 
-![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-1.png)
-
-    ## [1] -403
-
-![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-2.png)
+![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-1.png)![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-2.png)
 
 Comparative beta from FLM and FQM.
 
