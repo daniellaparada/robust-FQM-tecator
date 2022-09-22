@@ -13,7 +13,8 @@ Let’s first load some <code>R</code> packages.
     library(gdata)          # to use uppertriangle
     library(lattice)        # to plot
 
-Let’s now load some custom <code>R</code> functions.
+Let’s now load some custom <code>R</code> functions that are needed to
+compute robust estimators.
 
     source('funciones-auxiliares.R') 
     source('descomponer3.R')         # for covariance decomposition
@@ -25,9 +26,7 @@ of a spectrometric curve that corresponds to the absorbance measured on
 an equally spaced grid of 100 wavelengths between 850 and 1050 nm. The
 contents of fat protein and moisture were also recorded through analytic
 chemistry methods. The goal of the analysis is to predict the fat
-content (*y*) using some characteristics of the spectrometric curve. In
-particular, we consider the first derivative (*X*) of the spectrometric
-curve.
+content (*y*) using some characteristics of the spectrometric curve.
 
     datos <- data(tecator)
     absorp <- tecator$absorp.fdata
@@ -36,12 +35,17 @@ curve.
 Plots of the spectrometric data and it’s first derivative are displayed
 below.
 
-![](README_files/figure-markdown_strict/initial%20plots-1.png)![](README_files/figure-markdown_strict/initial%20plots-2.png)![](README_files/figure-markdown_strict/initial%20plots-3.png)
+![](README_files/figure-markdown_strict/initial%20plots-1.png)
 
 Functional boxplots of the spectrometric data and it’s first derivative
 are displayed below.
 
 ![](README_files/figure-markdown_strict/functional%20boxplots-1.png)![](README_files/figure-markdown_strict/functional%20boxplots-2.png)
+
+In particular, we will now consider the first derivative of the
+spectrometric curve which we denote *X*.
+
+![](README_files/figure-markdown_strict/X(t)-1.png)
 
 # Robust Estimators under a Functional Linear/Quadratic Model
 
@@ -60,12 +64,23 @@ In both cases, we choose 4 principal directions which explain more than
 
 Residuals boxplots both for FLM and FQM are displayed below.
 
-![](README_files/figure-markdown_strict/robust%20est3-1.png)![](README_files/figure-markdown_strict/robust%20est3-2.png)
+![](README_files/figure-markdown_strict/robust%20est%20resbox-1.png)
 
 In both cases, we show the common outliers between residuals boxplots
 and functional boxplots.
 
-![](README_files/figure-markdown_strict/robust%20est%20resbox-1.png)![](README_files/figure-markdown_strict/robust%20est%20resbox-2.png)
+    ##########################################
+    # Residuals boxplots and atypical data
+    #########################################
+    names(residuos_ROB_LINEAL_tecdatos) <- 1:length(residuos_ROB_LINEAL_tecdatos)
+    atipicos_LINEAL_tecdatos <- as.numeric(names(boxplot(residuos_ROB_LINEAL_tecdatos)$out))
+
+![](README_files/figure-markdown_strict/robust%20est%20resboxhide-1.png)
+
+    names(residuos_ROB_CUADRA_tecdatos) <- 1:length(residuos_ROB_CUADRA_tecdatos)
+    atipicos_CUADRA_tecdatos <- as.numeric(names(boxplot(residuos_ROB_CUADRA_tecdatos)$out))
+
+![](README_files/figure-markdown_strict/robust%20est%20resboxhide-2.png)
 
     ## [1] "The outliers from the robust linear fit are:"
 

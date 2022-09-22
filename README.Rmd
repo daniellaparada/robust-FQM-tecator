@@ -19,7 +19,7 @@ library(gdata)          # to use uppertriangle
 library(lattice)        # to plot
 ```
 
-Let's now load some custom <code>R</code> functions.
+Let's now load some custom <code>R</code> functions that are needed to compute robust estimators.
 
 ```{r installationcustom, results='hide', cache=FALSE, results=FALSE, warning=FALSE, comment=FALSE, message=FALSE}
 source('funciones-auxiliares.R') 
@@ -28,10 +28,9 @@ source('minimizar.R')            # minimization menu
 ```
 
 
-We will use the Tecator data set available in <code>R</code> (http://lib.stat.cmu.edu/datasets/tecator). Each observation consists of a spectrometric curve that corresponds to the absorbance measured on an equally
-spaced grid of 100 wavelengths between 850 and 1050 nm. The contents of fat protein and moisture were also recorded through analytic chemistry methods. The goal of the analysis is to predict the fat content ($y$) using some characteristics of the spectrometric curve. In particular, we consider the first derivative ($X$) of the spectrometric curve.
+We will use the Tecator data set available in <code>R</code> (http://lib.stat.cmu.edu/datasets/tecator). Each observation consists of a spectrometric curve that corresponds to the absorbance measured on an equally spaced grid of 100 wavelengths between 850 and 1050 nm. The contents of fat protein and moisture were also recorded through analytic chemistry methods. The goal of the analysis is to predict the fat content ($y$) using some characteristics of the spectrometric curve. 
 
-```{r loading data }
+```{r loading data}
 datos <- data(tecator)
 absorp <- tecator$absorp.fdata
 absorp1 <- fdata.deriv(absorp,nderiv = 1)  #  computes the first derivative
@@ -40,12 +39,13 @@ absorp1 <- fdata.deriv(absorp,nderiv = 1)  #  computes the first derivative
 Plots of the spectrometric data and it's first derivative are displayed below.
 
 ```{r initial plots, echo=FALSE}
+
+par(mfrow=c(1,2))
 plot(absorp)  #  spectrometric curve
 plot(absorp1)  #  first derivative 
-
-matplot(absorp1$argvals, t(absorp1$data), type = "l", lty = 1,
-        xlab = "Wavelength (nm)", ylab = "X(t)") 
+par(mfrow=c(1,1))
 ```
+
 
 Functional boxplots of the spectrometric data and it's first derivative are displayed below.
 
@@ -60,6 +60,15 @@ fd0<-fbplot(t(absorp$data), x = absorp$argvals, method = "MBD",
        xlab = "Wavelength", ylab = "Absorbance",
        xlim = c(850, 1050), ylim = c(2, 5.5))
 ```
+
+
+In particular, we will now consider the first derivative of the spectrometric curve which we denote $X$.
+
+```{r X(t), echo=FALSE}
+matplot(absorp1$argvals, t(absorp1$data), type = "l", lty = 1,
+        xlab = "Wavelength (nm)", ylab = "X(t)") 
+```
+
 
 # Robust Estimators under a Functional Linear/Quadratic Model
 
@@ -162,27 +171,29 @@ residuos_ROB_LINEAL_tecdatos <- tecdatos$y - predichos_ROB_LINEAL
 
 Residuals boxplots both for FLM and FQM are displayed below. 
 
-```{r robust est3, echo=FALSE}
+```{r robust est resbox, echo=FALSE}
 ######################################
 # RESIDUAL BOXPLOTS FROM FLM AND FQM
 #####################################
-boxplot(residuos_ROB_LINEAL_tecdatos,col="steelblue")
-boxplot(residuos_ROB_CUADRA_tecdatos,col="steelblue")
+par(mfrow=c(1,2))
+boxplot(residuos_ROB_LINEAL_tecdatos,col="steelblue", main="Residuals, FLM")
+boxplot(residuos_ROB_CUADRA_tecdatos,col="steelblue", main="Residuals, FQM")
+par(mfrow=c(1,1))
 ```
 
 In both cases, we show the common outliers between residuals boxplots and functional boxplots.
 
-```{r robust est resbox, echo=FALSE}
+```{r robust est resboxhide, results='hide', cache=FALSE, results=FALSE, warning=FALSE, comment=FALSE, message=FALSE}
 ##########################################
 # Residuals boxplots and atypical data
 #########################################
 names(residuos_ROB_LINEAL_tecdatos) <- 1:length(residuos_ROB_LINEAL_tecdatos)
 atipicos_LINEAL_tecdatos <- as.numeric(names(boxplot(residuos_ROB_LINEAL_tecdatos)$out))
-
-
 names(residuos_ROB_CUADRA_tecdatos) <- 1:length(residuos_ROB_CUADRA_tecdatos)
 atipicos_CUADRA_tecdatos <- as.numeric(names(boxplot(residuos_ROB_CUADRA_tecdatos)$out))
+```
 
+```{r robust est resbox id, echo=FALSE}
 print("The outliers from the robust linear fit are:")
 print(atipicos_LINEAL_tecdatos)
 # 7  34  35  43  44  45 118 119 121 122 126 127 128 129 130 140 143 168 171
@@ -224,7 +235,7 @@ Beta parameter from FLM fit is displayed below.
 ## PLOT BETA FROM FLM FIT
 ############################################## 
 plot(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 10,
-     col = "steelblue", ylab = expression(hat(beta)), main=expression(hat(beta)[LIN]))
+     col = "steelblue", ylab = expression(hat(beta)), main="Parameter estimation, FLM")
 ```
 
 Beta and gamma parameters from FQM fit are displayed below.
@@ -234,7 +245,7 @@ Beta and gamma parameters from FQM fit are displayed below.
 ## PLOT BETA AND GAMMA FROM FQM FIT
 ############################################## 
 plot(tecdatos$t, beta_rob_CUADRA  , type = "l", lwd=3,xlab = "Wavelength", pch = 10,
-     col = "steelblue", ylab = expression(hat(beta)), main=expression(hat(beta)[QUAD]))
+     col = "steelblue", ylab = expression(hat(beta)), main="Parameter estimation, FQM")
  
 
 ene.col=15
@@ -250,7 +261,7 @@ donde=seq(eme , EME,length=ene.col)
 wireframe(gamma_rob_CUADRA,scales = list(arrows = FALSE),   
 	xlab="t",ylab="s",zlab=" ",   cex=1.2,row.values=tecdatos$t,
 	column.values=tecdatos$t,drape = TRUE,aspect = c(1,1) , 
-  	colorkey = TRUE,at=donde, col.regions=colores)
+  	colorkey = TRUE,at=donde, col.regions=colores, main="Parameter estimation, FQM")
 ```
 
 
