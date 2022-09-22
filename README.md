@@ -100,7 +100,7 @@ in red.
 
 ![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-1.png)![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-2.png)
 
-Estimates comparison from FLM and FQM.
+Estimates comparison *β* from FLM and FQM.
 
 ![](README_files/figure-markdown_strict/robust%20est%20betas-1.png)
 
@@ -110,6 +110,24 @@ Residuals vs predicted, both for FLM and FQM are displayed below.
 
 ![](README_files/figure-markdown_strict/robust%20est6-1.png)
 
-# Classic Estimators under a Functional Linear/Quadratic Model
+# Classic Estimators under a Functional Linear/Quadratic Model and comparison between robust counterparts
 
-# Comparison between Classical and Robust
+In both cases, FLM and FQM, we choose 4 principal directions which
+explain more than 97% of the total variability as seen below.
+
+    ## [1] 0.9791543
+
+*β* curve estimated from FLM fit is displayed below.
+
+![](README_files/figure-markdown_strict/classic%20est%20beta%20FLM-1.png)
+We can now compare *β* estimates in FLM between classic and robust fit.
+
+![](README_files/figure-markdown_strict/robvsclas%20est%20beta%20FLM-1.png)
+*β* curve and *υ* surface estimated from FQM classic fit are displayed
+below.
+
+![](README_files/figure-markdown_strict/classic%20est%20beta%20gamma%20FQM-1.png)![](README_files/figure-markdown_strict/classic%20est%20beta%20gamma%20FQM-2.png)
+
+We can now compare *β* estimates in FQM between classic and robust fit.
+
+![](README_files/figure-markdown_strict/robvsclas%20est%20beta%20FQM-1.png)
