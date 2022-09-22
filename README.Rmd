@@ -49,7 +49,7 @@ matplot(absorp1$argvals, t(absorp1$data), type = "l", lty = 1,
 
 Functional boxplots of the spectrometric data and it's first derivative are displayed below.
 
-```{r functional boxplots}
+```{r functional boxplots, echo=FALSE}
 # First derivative
 fd1 <- fbplot(t(absorp1$data), x = absorp1$argvals, method =  "MBD",
        xlab = "Wavelength", ylab = "d(Absorbance, 1)",
@@ -61,11 +61,15 @@ fd0<-fbplot(t(absorp$data), x = absorp$argvals, method = "MBD",
        xlim = c(850, 1050), ylim = c(2, 5.5))
 ```
 
-# Robust Estimator under a Functional Linear Model
+# Robust Estimator under a Functional Linear/Quadratic Model
 
-$$y=\alpha_0+\langle X, \beta_0\rangle + \epsilon$$
+FLM: $$y=\alpha_0+\langle X, \beta_0\rangle + \epsilon$$
 
-```{r robust est FLM}
+FQM: $$y=\alpha_0+\langle X, \beta_0\rangle + \epsilon$$
+
+In both cases, we choose 4 principal directions which explain more than 97% of the total variability.
+
+```{r robust est, echo=FALSE}
 set.seed(124) 
 covariable <- 'd1' # first derivative  
  
@@ -76,7 +80,7 @@ tecdatos <- submuestra(indices, covariable = covariable)
  
 indices_tecdatos <- indices
 dt_tecdatos <- tecdatos$t[2]-tecdatos$t[1]
- 
+
 
 
 ###############################################
@@ -159,12 +163,12 @@ residuos_ROB_LINEAL_tecdatos <- tecdatos$y - predichos_ROB_LINEAL
 #########################################
 
 names(residuos_ROB_LINEAL_tecdatos) <- 1:length(residuos_ROB_LINEAL_tecdatos)
-boxplot(residuos_ROB_LINEAL_tecdatos)$out
+#boxplot(residuos_ROB_LINEAL_tecdatos)$out
 atipicos_LINEAL_tecdatos <- as.numeric(names(boxplot(residuos_ROB_LINEAL_tecdatos)$out))
 
 
 names(residuos_ROB_CUADRA_tecdatos) <- 1:length(residuos_ROB_CUADRA_tecdatos)
-boxplot(residuos_ROB_CUADRA_tecdatos)$out
+#boxplot(residuos_ROB_CUADRA_tecdatos)$out
 atipicos_CUADRA_tecdatos <- as.numeric(names(boxplot(residuos_ROB_CUADRA_tecdatos)$out))
 
 print("The outliers from the robust linear fit are:")
@@ -184,49 +188,35 @@ print(atipicos_CUADRA_tecdatos)
 print("The common outliers with the functional boxplot are")
 intersect(fd1$outpoint[fd1$outpoint <= length(indices_tecdatos)], atipicos_CUADRA_tecdatos)
 # 35 140
+```
 
+Curves corresponding to atypical residuals from FQM.
+
+```{r robust est2, echo=FALSE}
 ######################################
 # PLOT THE CURVES CORRESPONDING TO 
 # ATYPICAL Residuals from FQM
 #####################################
- 
-nombre="atipicos_CUADRA_tecdatos.pdf"
-pdf(nombre,bg='transparent')
 matplot(absorp1$argvals, t(absorp1$data), type = "l", lty = 1,lwd=2,
         xlab = "Wavelength", ylab = "X(t)",col="gray60")
 
 matplot(absorp1$argvals, t(absorp1$data[atipicos_CUADRA_tecdatos,]), type = "l", 
 	lty = 2,lwd=2,
         xlab = "Wavelength", ylab = "X(t)",col="red",add=TRUE)
+```
 
-dev.off()
 
-
+Residuals boxplots from FLM and FQM.
+```{r robust est3, echo=FALSE}
 ######################################
-# SAVE THE RESIDUAL BOXPLOT FROM FQM
+# RESIDUAL BOXPLOTS FROM FLM AND FQM
 #####################################
-
-nombre="boxplot-rob-quad.pdf"
-pdf(nombre,bg='transparent')
-
-boxplot(residuos_ROB_CUADRA_tecdatos,col="steelblue")
-
-dev.off()
-
-
-######################################
-# SAVE THE RESIDUAL BOXPLOT FROM FLM
-#####################################
-
-
-nombre="boxplot-rob-lineal.pdf"
-pdf(nombre,bg='transparent')
-
 boxplot(residuos_ROB_LINEAL_tecdatos,col="steelblue")
+boxplot(residuos_ROB_CUADRA_tecdatos,col="steelblue")
+```
 
-dev.off()
-
-
+Beta from FLM fit.
+```{r robust est4, echo=FALSE}
 ##############################################
 ## PLOT BETA FROM FLM FIT
 ############################################## 
@@ -267,8 +257,55 @@ wireframe(gamma_rob_CUADRA,scales = list(arrows = FALSE),
 ## PLOT residuals vs predicted
 ############################################## 
 
+par(mar=c(5,4,4,5)+.1)
+
+bb_L=boxplot(residuos_ROB_LINEAL_tecdatos)
+bb_C=boxplot(residuos_ROB_CUADRA_tecdatos)
+plot( predichos_ROB_CUADRA, residuos_ROB_CUADRA_tecdatos,
+xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3)
+ abline(h=bb_C$stats[1,1],col="red")
+abline(h=bb_C$stats[5,1],col="red")
 
 
+par(mar=c(5,4,4,5)+.1)
+
+plot( predichos_ROB_LINEAL, residuos_ROB_LINEAL_tecdatos, xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3)
+ abline(h=bb_L$stats[1,1],col="red")
+abline(h=bb_L$stats[5,1],col="red")
+```
+
+Beta and gamma from FQM fit.
+```{r robust est5, echo=FALSE}
+##############################################
+## PLOT BETA AND GAMMA FROM FQM FIT
+############################################## 
+
+par(mar = c(5,5,2,2))
+plot(tecdatos$t, beta_rob_CUADRA  , type = "l", lwd=3,xlab = "Wavelength", pch = 10,
+     col = "steelblue", ylab = expression(hat(beta)))
+ 
+
+ene.col=15
+colores=rainbow(ene.col, s = 1, v = 1, start = 0, end = max(1, ene.col - 1)/ene.col, alpha = 1)
+ 
+eme= min(gamma_rob_CUADRA)
+EME= max(gamma_rob_CUADRA)
+
+floor(eme)
+
+donde=seq(eme , EME,length=ene.col)
+
+wireframe(gamma_rob_CUADRA,scales = list(arrows = FALSE),   
+	xlab="t",ylab="s",zlab=" ",   cex=1.2,row.values=tecdatos$t,
+	column.values=tecdatos$t,drape = TRUE,aspect = c(1,1) , 
+  	colorkey = TRUE,at=donde, col.regions=colores)
+```
+
+Residuals vs predicted.
+```{r robust est6, echo=FALSE}
+##############################################
+## PLOT residuals vs predicted
+############################################## 
 
 par(mar=c(5,4,4,5)+.1)
 
@@ -285,44 +322,6 @@ par(mar=c(5,4,4,5)+.1)
 plot( predichos_ROB_LINEAL, residuos_ROB_LINEAL_tecdatos, xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3)
  abline(h=bb_L$stats[1,1],col="red")
 abline(h=bb_L$stats[5,1],col="red")
-
-
-########################
-# SAVE THE PLOTS
-##########################
-
-nombre="residuo-vs-yhat-rob-lineal.pdf" 
-pdf(nombre,bg='transparent')
-
-par(mar=c(5,4,4,5)+.1)
-
-plot( predichos_ROB_LINEAL, residuos_ROB_LINEAL_tecdatos, xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3)
-
-dev.off()
-
-nombre="residuo-vs-yhat-rob-lineal-zoom.pdf" 
-pdf(nombre,bg='transparent')
-
-par(mar=c(5,4,4,5)+.1)
-
-plot( predichos_ROB_LINEAL, residuos_ROB_LINEAL_tecdatos, 
-ylim=c(bb_L$stats[1,], bb_L$stats[5,]),xlab=expression(hat(y[i])),
- xlim=c(0,50),ylab=expression(r[i]), cex=1.3, cex.lab=1.3)
-
-dev.off()
-
-
-
-nombre="residuo-vs-yhat-rob-QUAD.pdf" 
-pdf(nombre,bg='transparent')
-
-par(mar=c(5,4,4,5)+.1)
-
-plot( predichos_ROB_CUADRA, residuos_ROB_CUADRA_tecdatos,
-xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3)
-
-dev.off()
-
 ```
 
 
