@@ -1,6 +1,6 @@
 ---
 title: "README"
-author: "Daniela Parada"
+author: "Daniela Laura Parada"
 date: "`r format(Sys.Date(), '%d %B, %Y')`"
 output:
    md_document:
@@ -185,7 +185,7 @@ par(mfrow=c(1,1))
 
 In both cases, we show the common outliers between residuals boxplots and functional boxplots.
 
-```{r robust est resboxhide, echo = FALSE, results = FALSE, fig.show='hide'}
+```{r robust est resboxhide, echo = FALSE, results = FALSE}
 ##########################################
 # Residuals boxplots and atypical data
 #########################################
