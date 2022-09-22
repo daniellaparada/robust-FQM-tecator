@@ -92,15 +92,15 @@ in red.
 
 ![](README_files/figure-markdown_strict/robust%20est%20atypical%20curves-1.png)
 
-Beta parameter from FLM fit is displayed below.
+*β* curve estimated from FLM fit is displayed below.
 
 ![](README_files/figure-markdown_strict/robust%20est%20beta%20FLM-1.png)
 
-Beta and gamma parameters from FQM fit are displayed below.
+*β* curve and *υ* surface estimated from FQM fit are displayed below.
 
 ![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-1.png)![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-2.png)
 
-Comparative beta from FLM and FQM.
+Estimates comparison from FLM and FQM.
 
 ![](README_files/figure-markdown_strict/robust%20est%20betas-1.png)
 

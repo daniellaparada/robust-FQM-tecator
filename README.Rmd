@@ -231,7 +231,7 @@ matplot(absorp1$argvals, t(absorp1$data[atipicos_CUADRA_tecdatos,]), type = "l",
         xlab = "Wavelength", ylab = "X(t)",col="red",add=TRUE)
 ```
 
-Beta parameter from FLM fit is displayed below.
+$\beta$ curve estimated from FLM fit is displayed below.
 
 ```{r robust est beta FLM, echo=FALSE, fig.height=6, fig.width=16}
 ##############################################
@@ -242,7 +242,7 @@ plot(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 1
      col = "steelblue", ylab = expression(hat(beta)), main="FLM")
 ```
 
-Beta and gamma parameters from FQM fit are displayed below.
+$\beta$ curve and $\upsilon$ surface estimated from FQM fit are displayed below.
 
 ```{r robust est beta gamma FQM, echo=FALSE, fig.height=6, fig.width=16}
 ##############################################
@@ -270,7 +270,7 @@ wireframe(gamma_rob_CUADRA,scales = list(arrows = FALSE),
 ```
 
 
-Comparative beta from FLM and FQM.
+Estimates comparison \beta from FLM and FQM.
 
 ```{r robust est betas, echo=FALSE, fig.height=6, fig.width=16}
 par(mfrow=c(1,2))
