@@ -66,7 +66,7 @@ par(mfrow=c(1,1))
 In particular, we will now consider the first derivative of the spectrometric curve which we denote $X$.
 
 ```{r X(t), echo=FALSE, fig.width=16, fig.height=6}
-par(mar=c(5.1, 12.1, 4.1, 12.1))
+par(mar=c(5.1, 22.1, 4.1, 22.1))
 matplot(absorp1$argvals, t(absorp1$data), type = "l", lty = 1,
         xlab = "Wavelength (nm)", ylab = "X(t)") 
 ```
@@ -185,7 +185,7 @@ par(mfrow=c(1,1))
 
 In both cases, we show the common outliers between residuals boxplots and functional boxplots.
 
-```{r robust est resboxhide, echo = FALSE, results = FALSE}
+```{r robust est resboxhide, echo = FALSE, results = FALSE, fig.show='hide'}
 ##########################################
 # Residuals boxplots and atypical data
 #########################################
@@ -222,7 +222,7 @@ Curves corresponding to atypical residuals from FQM are displayed below in red.
 # PLOT THE CURVES CORRESPONDING TO 
 # ATYPICAL Residuals from FQM
 #####################################
-par(mar=c(5.1, 12.1, 4.1, 12.1))
+par(mar=c(5.1, 22.1, 4.1, 22.1))
 matplot(absorp1$argvals, t(absorp1$data), type = "l", lty = 1,lwd=2,
         xlab = "Wavelength", ylab = "X(t)",col="gray60")
 
@@ -237,7 +237,7 @@ Beta parameter from FLM fit is displayed below.
 ##############################################
 ## PLOT BETA FROM FLM FIT
 ############################################## 
-par(mar=c(5.1, 12.1, 4.1, 12.1))
+par(mar=c(5.1, 22.1, 4.1, 22.1))
 plot(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 10,
      col = "steelblue", ylab = expression(hat(beta)), main="FLM")
 ```
@@ -248,7 +248,7 @@ Beta and gamma parameters from FQM fit are displayed below.
 ##############################################
 ## PLOT BETA AND GAMMA FROM FQM FIT
 ############################################## 
-par(mar=c(5.1, 12.1, 4.1, 12.1))
+par(mar=c(5.1, 22.1, 4.1, 22.1))
 plot(tecdatos$t, beta_rob_CUADRA  , type = "l", lwd=3,xlab = "Wavelength", pch = 10,
      col = "steelblue", ylab = expression(hat(beta)), main="FQM")
  
@@ -288,7 +288,7 @@ plot(tecdatos$t, beta_rob_CUADRA  , type = "l", lwd=3, xlab = "Wavelength", pch 
      col = "tomato", ylab = expression(hat(beta)))
 points(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3, pch = 10,
      col = "steelblue")
-legend(100, -200, legend=c("FLM", "FQM"),
+legend(1000, -200, legend=c("FLM", "FQM"),
        col=c("steelblue", "tomato"), lty=1, lwd=3, cex=0.8)
 ```
 
