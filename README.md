@@ -72,7 +72,7 @@ and functional boxplots.
     ##  [1]   7  34  35  43  44  45 118 119 121 122 126 127 128 129 130 140 143 168 171
     ## [20] 172 185 186 215
 
-    ## [1] "The common outliers with the functional boxplot are"
+    ## [1] "The common outliers with the functional boxplot are:"
 
     ## [1]  35 140
 
@@ -81,27 +81,31 @@ and functional boxplots.
     ##  [1]   4   8  10  20  31  34  35  38  40  43  44  45 102 108 117 121 122 123 125
     ## [20] 126 127 129 131 140 171 172 174 175 183 186 211 215
 
-    ## [1] "The common outliers with the functional boxplot are"
+    ## [1] "The common outliers with the functional boxplot are:"
 
     ## [1]  35 140
 
 Curves corresponding to atypical residuals from FQM are displayed below
 in red.
 
-![](README_files/figure-markdown_strict/robust%20est2-1.png)
+![](README_files/figure-markdown_strict/robust%20est%20atypical%20curves-1.png)
 
 Beta parameter from FLM fit is displayed below.
 
-![](README_files/figure-markdown_strict/robust%20est4-1.png)
+![](README_files/figure-markdown_strict/robust%20est%20beta%20FLM-1.png)
 
 Beta and gamma parameters from FQM fit are displayed below.
 
-![](README_files/figure-markdown_strict/robust%20est5-1.png)
+![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-1.png)
 
     ## [1] -403
 
-![](README_files/figure-markdown_strict/robust%20est5-2.png)
+![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-2.png)
+
+Comparative beta from FLM and FQM.
+
+![](README_files/figure-markdown_strict/robust%20est%20betas-1.png)
 
 Residuals vs predicted, both for FLM and FQM are displayed below.
 
-![](README_files/figure-markdown_strict/robust%20est6-1.png)![](README_files/figure-markdown_strict/robust%20est6-2.png)![](README_files/figure-markdown_strict/robust%20est6-3.png)![](README_files/figure-markdown_strict/robust%20est6-4.png)
+![](README_files/figure-markdown_strict/robust%20est6-1.png)![](README_files/figure-markdown_strict/robust%20est6-2.png)

@@ -176,14 +176,11 @@ In both cases, we show the common outliers between residuals boxplots and functi
 ##########################################
 # Residuals boxplots and atypical data
 #########################################
-
 names(residuos_ROB_LINEAL_tecdatos) <- 1:length(residuos_ROB_LINEAL_tecdatos)
-#boxplot(residuos_ROB_LINEAL_tecdatos)$out
 atipicos_LINEAL_tecdatos <- as.numeric(names(boxplot(residuos_ROB_LINEAL_tecdatos)$out))
 
 
 names(residuos_ROB_CUADRA_tecdatos) <- 1:length(residuos_ROB_CUADRA_tecdatos)
-#boxplot(residuos_ROB_CUADRA_tecdatos)$out
 atipicos_CUADRA_tecdatos <- as.numeric(names(boxplot(residuos_ROB_CUADRA_tecdatos)$out))
 
 print("The outliers from the robust linear fit are:")
@@ -191,7 +188,7 @@ print(atipicos_LINEAL_tecdatos)
 # 7  34  35  43  44  45 118 119 121 122 126 127 128 129 130 140 143 168 171
 # 172 185 186 215
 
-print("The common outliers with the functional boxplot are")
+print("The common outliers with the functional boxplot are:")
 intersect(fd1$outpoint[fd1$outpoint <= length(indices_tecdatos)], atipicos_LINEAL_tecdatos)
  # 35 140
 
@@ -200,14 +197,14 @@ print(atipicos_CUADRA_tecdatos)
 #  4   8  10  20  31  34  35  38  40  43  44  45 102 108 117 121 122 123 125
 # 126 127 129 131 140 171 172 174 175 183 186 211 215
 
-print("The common outliers with the functional boxplot are")
+print("The common outliers with the functional boxplot are:")
 intersect(fd1$outpoint[fd1$outpoint <= length(indices_tecdatos)], atipicos_CUADRA_tecdatos)
 # 35 140
 ```
 
 Curves corresponding to atypical residuals from FQM are displayed below in red.
 
-```{r robust est2, echo=FALSE}
+```{r robust est atypical curves, echo=FALSE}
 ######################################
 # PLOT THE CURVES CORRESPONDING TO 
 # ATYPICAL Residuals from FQM
@@ -222,28 +219,22 @@ matplot(absorp1$argvals, t(absorp1$data[atipicos_CUADRA_tecdatos,]), type = "l",
 
 Beta parameter from FLM fit is displayed below.
 
-```{r robust est4, echo=FALSE}
+```{r robust est beta FLM, echo=FALSE}
 ##############################################
 ## PLOT BETA FROM FLM FIT
 ############################################## 
-
-
-par(mar = c(5,5,2,2))
 plot(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 10,
-     col = "steelblue", ylab = expression(hat(beta)))
+     col = "steelblue", ylab = expression(hat(beta)), main=expression(hat(beta)[LIN]))
 ```
 
 Beta and gamma parameters from FQM fit are displayed below.
 
-
-```{r robust est5, echo=FALSE}
+```{r robust est beta gamma FQM, echo=FALSE}
 ##############################################
 ## PLOT BETA AND GAMMA FROM FQM FIT
 ############################################## 
-
-par(mar = c(5,5,2,2))
 plot(tecdatos$t, beta_rob_CUADRA  , type = "l", lwd=3,xlab = "Wavelength", pch = 10,
-     col = "steelblue", ylab = expression(hat(beta)))
+     col = "steelblue", ylab = expression(hat(beta)), main=expression(hat(beta)[QUAD]))
  
 
 ene.col=15
@@ -263,6 +254,19 @@ wireframe(gamma_rob_CUADRA,scales = list(arrows = FALSE),
 ```
 
 
+Comparative beta from FLM and FQM.
+
+```{r robust est betas, echo=FALSE}
+par(mfrow=c(1,2))
+plot(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 10,
+     col = "steelblue", ylab = expression(hat(beta)), main=expression(hat(beta)[LIN]))
+
+plot(tecdatos$t, beta_rob_CUADRA  , type = "l", lwd=3,xlab = "Wavelength", pch = 10,
+     col = "steelblue", ylab = expression(hat(beta)), main=expression(hat(beta)[QUAD]))
+par(mfrow=c(1,1))
+```
+
+
 Residuals vs predicted, both for FLM and FQM are displayed below.
 
 ```{r robust est6, echo=FALSE}
@@ -270,21 +274,20 @@ Residuals vs predicted, both for FLM and FQM are displayed below.
 ## PLOT residuals vs predicted
 ############################################## 
 
-par(mar=c(5,4,4,5)+.1)
+par(mfrow=c(1,2))
 
 bb_L=boxplot(residuos_ROB_LINEAL_tecdatos)
 bb_C=boxplot(residuos_ROB_CUADRA_tecdatos)
-plot( predichos_ROB_CUADRA, residuos_ROB_CUADRA_tecdatos,
-xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3)
- abline(h=bb_C$stats[1,1],col="red")
-abline(h=bb_C$stats[5,1],col="red")
 
-
-par(mar=c(5,4,4,5)+.1)
-
-plot( predichos_ROB_LINEAL, residuos_ROB_LINEAL_tecdatos, xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3)
+plot( predichos_ROB_LINEAL, residuos_ROB_LINEAL_tecdatos, xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3, main="FLM fit")
  abline(h=bb_L$stats[1,1],col="red")
 abline(h=bb_L$stats[5,1],col="red")
+
+plot( predichos_ROB_CUADRA, residuos_ROB_CUADRA_tecdatos,
+xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3, main="FQM fit")
+abline(h=bb_C$stats[1,1],col="red")
+abline(h=bb_C$stats[5,1],col="red")
+par(mfrow=c(1,1))
 ```
 
 
