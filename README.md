@@ -109,3 +109,7 @@ Comparative beta from FLM and FQM.
 Residuals vs predicted, both for FLM and FQM are displayed below.
 
 ![](README_files/figure-markdown_strict/robust%20est6-1.png)
+
+# Classic Estimators under a Functional Linear/Quadratic Model
+
+# Comparison between Classical and Robust

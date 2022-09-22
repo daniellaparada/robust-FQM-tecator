@@ -316,3 +316,8 @@ abline(h=bb_C$stats[5,1],col="red")
 par(mfrow=c(1,1))
 ```
 
+
+# Classic Estimators under a Functional Linear/Quadratic Model
+
+
+# Comparison between Classical and Robust
