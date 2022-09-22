@@ -69,14 +69,14 @@ In both cases, we choose 4 principal directions which explain more than
 
     ## [1] 0.9841754
 
-Residuals boxplots both for FLM and FQM are displayed below.
+Residuals boxplots both for FLM and FQM robust fit are displayed below.
 
 ![](README_files/figure-markdown_strict/robust%20est%20resbox-1.png)
 
 In both cases, we show the common outliers between residuals boxplots
 and functional boxplots. As seen below, only observations 35 and 140 are
 common outliers with the functional boxplot for both linear (FLM) and
-quadratic (FQM) fit.
+quadratic (FQM) robust fit.
 
     ## [1] "The outliers from the robust FLM fit are:"
 
@@ -96,22 +96,23 @@ quadratic (FQM) fit.
 
     ## [1]  35 140
 
-Curves corresponding to atypical residuals from FQM are displayed below
-in red.
+Curves corresponding to atypical residuals from FQM robust fit are
+displayed below in red.
 
 ![](README_files/figure-markdown_strict/robust%20est%20atypical%20curves-1.png)
 
-*β* curve estimated from FLM fit is displayed below.
+*β* curve estimated from FLM robust fit is displayed below.
 
 ![](README_files/figure-markdown_strict/robust%20est%20beta%20FLM-1.png)
 
-*β* curve and *υ* surface estimated from FQM fit are displayed below.
+*β* curve and *υ* surface estimated from FQM robust fit are displayed
+below.
 
 ![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-1.png)![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-2.png)
 
-Estimates comparison *β* from FLM and FQM in the robust fit. The shape
-is similar, but for the FQM robust fit, the variation range of *β* in
-*y*−axis is wider.
+Estimates comparison of *β* from FLM and FQM in the robust fit. The
+shape is similar, but for the FQM robust fit, the variation range of *β*
+in *y*−axis is wider than for FLM robust fit.
 
 ![](README_files/figure-markdown_strict/robust%20est%20betas-1.png)
 
@@ -125,8 +126,8 @@ displayed below.
 # Classic Estimators under a Functional Linear/Quadratic Model and comparison between their robust counterparts
 
 In both cases, FLM and FQM, we choose 4 principal directions for the
-classic fit which explain more than 97% of the total variability as seen
-below.
+classic fit which explain more than 97% of the total variability, as
+seen below.
 
     ## [1] 0.9791543
 

@@ -173,7 +173,7 @@ residuos_ROB_LINEAL_tecdatos <- tecdatos$y - predichos_ROB_LINEAL
 ```
 
 
-Residuals boxplots both for FLM and FQM are displayed below. 
+Residuals boxplots both for FLM and FQM robust fit are displayed below. 
 
 ```{r robust est resbox, echo=FALSE, fig.height=6, fig.width=16}
 ######################################
@@ -185,7 +185,7 @@ boxplot(residuos_ROB_CUADRA_tecdatos,col="steelblue", main="FQM")
 par(mfrow=c(1,1))
 ```
 
-In both cases, we show the common outliers between residuals boxplots and functional boxplots. As seen below, only observations 35 and 140 are common outliers with the functional boxplot for both linear (FLM) and quadratic (FQM) fit.
+In both cases, we show the common outliers between residuals boxplots and functional boxplots. As seen below, only observations 35 and 140 are common outliers with the functional boxplot for both linear (FLM) and quadratic (FQM) robust fit.
 
 ```{r robust est resboxhide, echo = FALSE, results = FALSE, fig.show='hide'}
 ##########################################
@@ -217,7 +217,7 @@ intersect(fd1$outpoint[fd1$outpoint <= length(indices_tecdatos)], atipicos_CUADR
 # 35 140
 ```
 
-Curves corresponding to atypical residuals from FQM are displayed below in red.
+Curves corresponding to atypical residuals from FQM robust fit are displayed below in red.
 
 ```{r robust est atypical curves, echo=FALSE, fig.width=16, fig.height=6}
 ######################################
@@ -233,7 +233,7 @@ matplot(absorp1$argvals, t(absorp1$data[atipicos_CUADRA_tecdatos,]), type = "l",
         xlab = "Wavelength", ylab = "X(t)",col="red",add=TRUE)
 ```
 
-$\beta$ curve estimated from FLM fit is displayed below.
+$\beta$ curve estimated from FLM robust fit is displayed below.
 
 ```{r robust est beta FLM, echo=FALSE, fig.height=6, fig.width=16}
 ##############################################
@@ -244,7 +244,7 @@ plot(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 1
      col = "tomato", ylab = expression(hat(beta)), main="FLM")
 ```
 
-$\beta$ curve and $\upsilon$ surface estimated from FQM fit are displayed below.
+$\beta$ curve and $\upsilon$ surface estimated from FQM robust fit are displayed below.
 
 ```{r robust est beta gamma FQM, echo=FALSE, fig.height=6, fig.width=16}
 ##############################################
@@ -272,7 +272,7 @@ wireframe(gamma_rob_CUADRA,scales = list(arrows = FALSE),
 ```
 
 
-Estimates comparison $\beta$ from FLM and FQM in the robust fit. The shape is similar, but for the FQM robust fit, the variation range of $\beta$ in $y-$axis is wider.
+Estimates comparison of $\beta$ from FLM and FQM in the robust fit. The shape is similar, but for the FQM robust fit, the variation range of $\beta$ in $y-$axis is wider than for FLM robust fit.
 
 ```{r robust est betas, echo=FALSE, fig.height=6, fig.width=16}
 par(mfrow=c(1,2))
@@ -321,7 +321,7 @@ par(mfrow=c(1,1))
 
 # Classic Estimators under a Functional Linear/Quadratic Model and comparison between their robust counterparts
 
-In both cases, FLM and FQM, we choose 4 principal directions for the classic fit which explain more than 97% of the total variability as seen below.
+In both cases, FLM and FQM, we choose 4 principal directions for the classic fit which explain more than 97% of the total variability, as seen below.
 
 ```{r classic est, echo=FALSE}
 #######################################
@@ -433,7 +433,7 @@ $\beta$ curve and $\upsilon$ surface estimated from FQM classic fit are displaye
 ############################################## 
 par(mar=c(5.1, 24.1, 4.1, 24.1))
 plot(tecdatos$t, beta_CL_CUADRA, type = "l", lwd=3,xlab = "Wavelength", pch = 10,
-     col = "blue", ylab = expression(hat(beta)),main="FQM",
+     col = "red", ylab = expression(hat(beta)),main="FQM",
      ylim=c(min(c(beta_CL_CUADRA,beta_rob_CUADRA)), max(c(beta_CL_CUADRA,beta_rob_CUADRA))))
 
 ene.col=15
