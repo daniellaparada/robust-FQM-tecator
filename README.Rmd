@@ -282,6 +282,14 @@ plot(tecdatos$t, beta_rob_CUADRA  , type = "l", lwd=3,xlab = "Wavelength", pch =
 par(mfrow=c(1,1))
 ```
 
+```{r robust est betas2, echo=FALSE, fig.height=6, fig.width=16}
+par(mar=c(5.1, 12.1, 4.1, 12.1))
+plot(tecdatos$t, beta_rob_CUADRA  , type = "l", lwd=3,xlab = "Wavelength", pch = 10,
+     col = "tomato", ylab = expression(hat(beta)))
+points(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3, pch = 10,
+     col = "steelblue")
+```
+
 
 Residuals vs predicted, both for FLM and FQM are displayed below.
 ```{r robust est6hide, echo=FALSE, fig.show="hide"}

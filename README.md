@@ -104,6 +104,8 @@ Comparative beta from FLM and FQM.
 
 ![](README_files/figure-markdown_strict/robust%20est%20betas-1.png)
 
+![](README_files/figure-markdown_strict/robust%20est%20betas2-1.png)
+
 Residuals vs predicted, both for FLM and FQM are displayed below.
 
 ![](README_files/figure-markdown_strict/robust%20est6-1.png)
