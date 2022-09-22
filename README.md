@@ -69,8 +69,6 @@ Residuals boxplots both for FLM and FQM are displayed below.
 In both cases, we show the common outliers between residuals boxplots
 and functional boxplots.
 
-![](README_files/figure-markdown_strict/robust%20est%20resboxhide-1.png)![](README_files/figure-markdown_strict/robust%20est%20resboxhide-2.png)
-
     ## [1] "The outliers from the robust linear fit are:"
 
     ##  [1]   7  34  35  43  44  45 118 119 121 122 126 127 128 129 130 140 143 168 171
@@ -108,4 +106,4 @@ Comparative beta from FLM and FQM.
 
 Residuals vs predicted, both for FLM and FQM are displayed below.
 
-![](README_files/figure-markdown_strict/robust%20est6-1.png)![](README_files/figure-markdown_strict/robust%20est6-2.png)![](README_files/figure-markdown_strict/robust%20est6-3.png)
+![](README_files/figure-markdown_strict/robust%20est6-1.png)![](README_files/figure-markdown_strict/robust%20est6-2.png)
