@@ -66,7 +66,7 @@ par(mfrow=c(1,1))
 In particular, we will now consider the first derivative of the spectrometric curve which we denote $X$.
 
 ```{r X(t), echo=FALSE, fig.width=16, fig.height=6}
-par(mar=c(5.1, 10.1, 4.1, 10.1))
+par(mar=c(5.1, 12.1, 4.1, 12.1))
 matplot(absorp1$argvals, t(absorp1$data), type = "l", lty = 1,
         xlab = "Wavelength (nm)", ylab = "X(t)") 
 ```
@@ -222,6 +222,7 @@ Curves corresponding to atypical residuals from FQM are displayed below in red.
 # PLOT THE CURVES CORRESPONDING TO 
 # ATYPICAL Residuals from FQM
 #####################################
+par(mar=c(5.1, 12.1, 4.1, 12.1))
 matplot(absorp1$argvals, t(absorp1$data), type = "l", lty = 1,lwd=2,
         xlab = "Wavelength", ylab = "X(t)",col="gray60")
 
@@ -236,6 +237,7 @@ Beta parameter from FLM fit is displayed below.
 ##############################################
 ## PLOT BETA FROM FLM FIT
 ############################################## 
+par(mar=c(5.1, 12.1, 4.1, 12.1))
 plot(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 10,
      col = "steelblue", ylab = expression(hat(beta)), main="FLM")
 ```
@@ -246,6 +248,7 @@ Beta and gamma parameters from FQM fit are displayed below.
 ##############################################
 ## PLOT BETA AND GAMMA FROM FQM FIT
 ############################################## 
+par(mar=c(5.1, 12.1, 4.1, 12.1))
 plot(tecdatos$t, beta_rob_CUADRA  , type = "l", lwd=3,xlab = "Wavelength", pch = 10,
      col = "steelblue", ylab = expression(hat(beta)), main="FQM")
  
