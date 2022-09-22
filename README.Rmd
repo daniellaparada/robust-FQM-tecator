@@ -556,27 +556,19 @@ residuos_CL_LINEAL_tecdatos_sin_out <- tecdatos_sin_out$y - predichos_CL_LINEAL_
 
 ```
 
-Plots of the estimated parameters with and wothout outliers.
+Predicted vs residuals in the classic (CL) FLM and FQM fit, both without outliers, are shown in the first pair of plots. Estimated $\beta$ parameters are compared among classic (CL), robust (ROB) and classic after outlier removal (CL without out) in the second pair of plots, both for FLM and FQM fit.
 
 ```{r plotscompar, echo=FALSE, fig.height=6, fig.width=16}
-par(mar=c(5.1, 24.1, 4.1, 24.1))
+par(mfrow=c(1,2))
+
+plot( predichos_CL_LINEAL_sin_out,residuos_CL_LINEAL_tecdatos_sin_out, xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3, main="FLM without out")
 plot( predichos_CL_CUADRA_sin_out, residuos_CL_CUADRA_tecdatos_sin_out,
-xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3)
+xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3,
+main="FQM without out")
 
-plot( predichos_CL_LINEAL_sin_out,residuos_CL_LINEAL_tecdatos_sin_out, xlab=expression(hat(y[i])), ylab=expression(r[i]), cex=1.3, cex.lab=1.3)
-
-plot(tecdatos$t, beta_CL_CUADRA, type = "l",  lwd=3,xlab = "Wavelength", pch = 10,
-     col = "tomato", ylab = expression(hat(beta)),
-     ylim=c(min(c(beta_CL_CUADRA,beta_rob_CUADRA)), max(c(beta_CL_CUADRA,beta_rob_CUADRA))))
- 
-lines(tecdatos$t, beta_rob_CUADRA, type = "l", lwd=3,xlab = "Wavelength", pch = 10,
-     col = "blue")
- 
-lines(tecdatos$t, beta_CL_CUADRA_sin_out, type = "l", lty=2,lwd=4,xlab = "Wavelength", pch = 10,
-     col = "pink")
 
 plot(tecdatos$t, beta_CL_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 10,
-     col = "red", ylab = expression(hat(beta)),
+     col = "red", ylab = expression(hat(beta)),main="FLM",
 	 ylim=c(min(c(beta_CL_LINEAL,beta_rob_LINEAL)), max(c(beta_CL_LINEAL,beta_rob_LINEAL))))
  
 lines(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 10,
@@ -584,6 +576,23 @@ lines(tecdatos$t, beta_rob_LINEAL, type = "l", lwd=3,xlab = "Wavelength", pch = 
 
 lines(tecdatos$t, beta_CL_LINEAL_sin_out, type = "l", lty=2,lwd=4,xlab = "Wavelength", pch = 10,
      col = "pink")
+legend(1000, -100, legend=c("CL", "ROB", "CL without out"),
+       col=c("red", "blue", "pink"), lty=c(1,1,2), lwd=3, cex=1, bty="n")
+
+
+plot(tecdatos$t, beta_CL_CUADRA, type = "l",  lwd=3,xlab = "Wavelength", pch = 10,
+     col = "tomato", ylab = expression(hat(beta)),main="FQM",
+     ylim=c(min(c(beta_CL_CUADRA,beta_rob_CUADRA)), max(c(beta_CL_CUADRA,beta_rob_CUADRA))))
+ 
+lines(tecdatos$t, beta_rob_CUADRA, type = "l", lwd=3,xlab = "Wavelength", pch = 10,
+     col = "blue")
+ 
+lines(tecdatos$t, beta_CL_CUADRA_sin_out, type = "l", lty=2,lwd=4,xlab = "Wavelength", pch = 10,
+     col = "pink")
+legend(1000, -200, legend=c("CL", "ROB", "CL without out"),
+       col=c("tomato", "blue", "pink"), lty=c(1,1,2), lwd=3, cex=1, bty="n")
+
+par(mfrow=c(1,1))
 ```
 
 

@@ -148,8 +148,12 @@ than 97% of the variability.
 
     ## [1] 0.9774696
 
-Plots of the estimated parameters with and wothout outliers.
+Predicted vs residuals in the classic (CL) FLM and FQM fit, both without
+outliers, are shown in the first pair of plots. Estimated *β* parameters
+are compared among classic (CL), robust (ROB) and classic after outlier
+removal (CL without out) in the second pair of plots, both for FLM and
+FQM fit.
 
-![](README_files/figure-markdown_strict/plotscompar-1.png)![](README_files/figure-markdown_strict/plotscompar-2.png)![](README_files/figure-markdown_strict/plotscompar-3.png)![](README_files/figure-markdown_strict/plotscompar-4.png)
+![](README_files/figure-markdown_strict/plotscompar-1.png)![](README_files/figure-markdown_strict/plotscompar-2.png)
 
 We now show surface differences between
