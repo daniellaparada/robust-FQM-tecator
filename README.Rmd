@@ -65,7 +65,7 @@ par(mfrow=c(1,1))
 
 In particular, we will now consider the first derivative of the spectrometric curve which we denote $X$.
 
-```{r X(t), echo=FALSE, fig.height=6, fig.width=6}
+```{r X(t), echo=FALSE, fig.width=8, fig.height=6}
 matplot(absorp1$argvals, t(absorp1$data), type = "l", lty = 1,
         xlab = "Wavelength (nm)", ylab = "X(t)") 
 ```
@@ -184,7 +184,7 @@ par(mfrow=c(1,1))
 
 In both cases, we show the common outliers between residuals boxplots and functional boxplots.
 
-```{r robust est resboxhide, echo = FALSE, eval = TRUE, results = "hide"}
+```{r robust est resboxhide, echo = FALSE, results = "hide"}
 ##########################################
 # Residuals boxplots and atypical data
 #########################################
@@ -216,7 +216,7 @@ intersect(fd1$outpoint[fd1$outpoint <= length(indices_tecdatos)], atipicos_CUADR
 
 Curves corresponding to atypical residuals from FQM are displayed below in red.
 
-```{r robust est atypical curves, echo=FALSE, fig.height=6, fig.width=6}
+```{r robust est atypical curves, echo=FALSE, fig.width=8}
 ######################################
 # PLOT THE CURVES CORRESPONDING TO 
 # ATYPICAL Residuals from FQM
