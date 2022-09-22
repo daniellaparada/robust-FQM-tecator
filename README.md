@@ -40,7 +40,7 @@ below.
 Functional boxplots of the spectrometric data and it’s first derivative
 are displayed below.
 
-![](README_files/figure-markdown_strict/functional%20boxplots-1.png)![](README_files/figure-markdown_strict/functional%20boxplots-2.png)
+![](README_files/figure-markdown_strict/functional%20boxplots-1.png)
 
 In particular, we will now consider the first derivative of the
 spectrometric curve which we denote *X*.
@@ -69,18 +69,7 @@ Residuals boxplots both for FLM and FQM are displayed below.
 In both cases, we show the common outliers between residuals boxplots
 and functional boxplots.
 
-    ##########################################
-    # Residuals boxplots and atypical data
-    #########################################
-    names(residuos_ROB_LINEAL_tecdatos) <- 1:length(residuos_ROB_LINEAL_tecdatos)
-    atipicos_LINEAL_tecdatos <- as.numeric(names(boxplot(residuos_ROB_LINEAL_tecdatos)$out))
-
-![](README_files/figure-markdown_strict/robust%20est%20resboxhide-1.png)
-
-    names(residuos_ROB_CUADRA_tecdatos) <- 1:length(residuos_ROB_CUADRA_tecdatos)
-    atipicos_CUADRA_tecdatos <- as.numeric(names(boxplot(residuos_ROB_CUADRA_tecdatos)$out))
-
-![](README_files/figure-markdown_strict/robust%20est%20resboxhide-2.png)
+![](README_files/figure-markdown_strict/robust%20est%20resboxhide-1.png)![](README_files/figure-markdown_strict/robust%20est%20resboxhide-2.png)
 
     ## [1] "The outliers from the robust linear fit are:"
 
