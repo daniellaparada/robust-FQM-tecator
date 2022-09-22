@@ -157,3 +157,5 @@ FQM fit.
 ![](README_files/figure-markdown_strict/plotscompar-1.png)![](README_files/figure-markdown_strict/plotscompar-2.png)
 
 We now show surface differences between
+
+![](README_files/figure-markdown_strict/dif%20suf%20CL%20ROB-1.png)![](README_files/figure-markdown_strict/dif%20suf%20CL%20ROB-2.png)![](README_files/figure-markdown_strict/dif%20suf%20CL%20ROB-3.png)
