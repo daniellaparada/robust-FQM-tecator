@@ -15,9 +15,6 @@ Let’s first load some <code>R</code> packages.
 
 Let’s now load some custom <code>R</code> functions.
 
-    #library("devtools")
-    #install_github("daniellaparada/robust-FQM-tecator")
-    #library("robust-FQM-tecator")
     source('funciones-auxiliares.R') 
     source('descomponer3.R')         # for covariance decomposition
     source('minimizar.R')            # minimization menu
@@ -39,18 +36,7 @@ curve.
 Plots of the spectrometric data and it’s first derivative are displayed
 below.
 
-    plot(absorp)  #  spectrometric curve
-
-![](README_files/figure-markdown_strict/initial%20plots-1.png)
-
-    plot(absorp1)  #  first derivative 
-
-![](README_files/figure-markdown_strict/initial%20plots-2.png)
-
-    matplot(absorp1$argvals, t(absorp1$data), type = "l", lty = 1,
-            xlab = "Wavelength (nm)", ylab = "X(t)") 
-
-![](README_files/figure-markdown_strict/initial%20plots-3.png)
+![](README_files/figure-markdown_strict/initial%20plots-1.png)![](README_files/figure-markdown_strict/initial%20plots-2.png)![](README_files/figure-markdown_strict/initial%20plots-3.png)
 
 Functional boxplots of the spectrometric data and it’s first derivative
 are displayed below.
@@ -74,14 +60,11 @@ are displayed below.
 *y* = *α*<sub>0</sub> + ⟨*X*, *β*<sub>0</sub>⟩ + *ϵ*
 
     set.seed(124) 
-    covariable <- 'd1'   
+    covariable <- 'd1' # first derivative  
      
     indices <- 1:215  
-     
-    #######################################
-    ## DATA SET
-    ######################################
 
+    # indices
     tecdatos <- submuestra(indices, covariable = covariable)
      
     indices_tecdatos <- indices
