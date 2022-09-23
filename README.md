@@ -43,14 +43,21 @@ al. (2014) and Boente et al. (2019).
 
 We will use the Tecator data set available in the <code>fda.usc</code>
 library from <code>R</code>
-(<http://lib.stat.cmu.edu/datasets/tecator>). Each one of the 215
-observations from this dataset consists of a spectrometric curve that
-corresponds to the absorbance measured on an equally spaced grid of 100
-wavelengths between 850 and 1050 nm with Tecator Infratec Food and Feed
-Analyzer. The contents of fat protein and moisture were also recorded
-through analytic chemistry methods. The goal of the analysis is to
-predict the fat content (*y*) using some characteristics of the
-spectrometric curve.
+(<http://lib.stat.cmu.edu/datasets/tecator>). Each observation from this
+dataset consists of a spectrometric curve that corresponds to the
+absorbance measured on an equally spaced grid of 100 wavelengths between
+850 and 1050 nm. The spectrometric curves of these 215 samples of finely
+chopped meat were measured with Tecator Infratec Food and Feed Analyzer.
+The contents of fat protein and moisture were also recorded through
+analytic chemistry methods. The goal of the analysis is to predict the
+fat content (*y*) using some characteristics of the spectrometric curve.
+
+To predict the fat content of a meat sample from its absorbance
+spectrum, Yao and Müller (2010) fitted a functional quadratic model,
+while Horvath and Reeder (2013) tested the significance of the quadratic
+term. However, Boente and Vahnovan (2017) and Febrero-Bande and de la
+Fuente (2012), among others, showed the presence of atypical data in the
+spectrometric curves.
 
 Let’s first load some <code>R</code> packages.
 
@@ -100,17 +107,146 @@ Functional Linear Model (FLM):
 Functional Quadratic Model (FQM):
 *y* = *α* + ⟨*X*, *β*⟩ + ⟨*X*, *Υ**X*⟩ + *ϵ*
 
-In both cases, the purpose is to estimate the linear coefficient *β* and
-the quadratic kernel *υ* related to the *Υ* operator in the quadratic
-model (FQM). In that sense, we choose 4 principal directions which
-explain more than 98% of the total variability as seen below, and
-provide a robust fit that involves robust estimators of the principal
-directions with robust regression estimators based on a bounded loss
-function and a preliminary residual scale estimator.
+Various aspects of the functional linear model including implementations
+and asymptotic theory, have been studied among others in Cardot et
+al. (2003), Shen and Faraway (2004), Cardot and Sarda (2005), Cai and
+Hall (2006), Hall and Horowitz (2007), Febrero-Bande et al. (2017) and
+Reiss et al. (2017). Yao and Müller (2010) and Horvath and Reeder (2013)
+considered that this linear model imposes a constraint on the regression
+relationship that may be too restrictive for some applications. To
+preserve a reasonable structural constraint, but at the same time
+improving the model flexibility within the class of parametric models,
+Yao and Muller (2010) defined a functional polynomial model analogous to
+the extension from simple linear regression to polynomial regression. As
+in functional linear regression, regularization is key step to define
+the estimators. For that reason, Yao and Müller (2010) and Horvath and
+Reeder (2013) project the predictor on the eigenfunctions basis of the
+process, which is then truncated at a reasonable number of included
+components, leading to a parsimonious representation. With this
+representation, Yao and Müller (2010) have shown that the functional
+polynomial regression model can be represented as a polynomial
+regression model in the functional principal component scores of the
+predictor process.
+
+In this real data example, our purpose is to estimate the linear
+coefficient *β* and the quadratic kernel *υ* related to the *Υ* operator
+in the quadratic model (FQM). In that sense, we choose 4 principal
+directions which explain more than 98% of the total variability as seen
+below, and provide a robust fit that involves robust estimators of the
+principal directions with robust regression estimators based on a
+bounded loss function and a preliminary residual scale estimator.
+
+    set.seed(124)
+    covariable <- 'd1' # first derivative
+
+    indices <- 1:215
+
+    # Sample index
+    tecdatos <- submuestra(indices, covariable = covariable)
+
+    indices_tecdatos <- indices
+    dt_tecdatos <- tecdatos$t[2] - tecdatos$t[1]
+
+    ##################################################
+    ## Choose the number of principal directions.
+    ## Since it is equal to 4, then varexp should be 1
+    ##################################################
+
+    freq = 4
+    varexp = 1
+
+    ###############################################
+    ## ROBUST ESTIMATE UNDER A FLM
+    ## fat = alfa_0 + < absorp1, beta_0 > + epsilon
+    ###############################################
+
+    est_rob_LINEAL <- estimar(
+      y = tecdatos$y,
+      xcenter = tecdatos$x,
+      ttt = tecdatos$t,
+      ajuste = 'lineal',
+      freq = freq,
+      cov_type = 'gerS',
+      fLoss = 'lmrob',
+      cterho = 3.443689,
+      nresamp = 5000,
+      varexp = varexp
+    )
+
+    ######################################
+    # Percentage explained by 4 directions
+    ######################################
+
+    est_rob_LINEAL$porcentaje
 
     ## [1] 0.9841754
 
+    #0.9841754
+
+    #################################
+    # Store the estimates and compute 
+    # predictions for the residuals
+    #################################
+
+    beta_rob_LINEAL <- est_rob_LINEAL$beta
+
+    phies_rob_LINEAL <- est_rob_LINEAL$autofun
+
+    coef_rob_LINEAL <-   tecdatos$x %*% phies_rob_LINEAL * dt_tecdatos
+
+    predichos_ROB_LINEAL <-
+      est_rob_LINEAL$alfa + coef_rob_LINEAL %*% est_rob_LINEAL$slope_coef
+
+    ##############################################################################
+    ## ROBUST ESTIMATOR UNDER A FQM
+    ## fat = alfa_0 + < absorp1, beta_0 > + <absorp1, Upsilon_0 absorp1> + epsilon
+    ##############################################################################
+
+    est_rob_CUADRA <-
+      estimar(
+        y = tecdatos$y,
+        xcenter = tecdatos$x,
+        ttt = tecdatos$t,
+        ajuste = 'quadra',
+        freq = freq,
+        cov_type = 'gerS',
+        fLoss = 'lmrob',
+        cterho = 3.443689,
+        nresamp = 5000,
+        varexp = varexp
+      )
+
+    #######################################
+    # percentage explained by 4 directions
+    #######################################
+
+    est_rob_CUADRA$porcentaje
+
     ## [1] 0.9841754
+
+    #0.9841754
+
+    #################################
+    # Store the estimates and compute 
+    # predictions for the residuals
+    #################################
+
+    beta_rob_CUADRA <- est_rob_CUADRA$beta
+    gamma_rob_CUADRA <- est_rob_CUADRA$gamma
+    phies_rob <- est_rob_CUADRA$autofun
+
+    coef_rob_CUADRA <-   tecdatos$x %*% phies_rob * dt_tecdatos
+
+    predichos_ROB_CUADRA <-
+      est_rob_CUADRA$alfa + coef_rob_CUADRA %*% est_rob_CUADRA$slope_coef + diag(coef_rob_CUADRA %*% est_rob_CUADRA$gama_coef %*% t(coef_rob_CUADRA))
+
+    ################################
+    ## Residuals from the robust fit
+    ################################
+
+    residuos_ROB_CUADRA_tecdatos <- tecdatos$y - predichos_ROB_CUADRA
+
+    residuos_ROB_LINEAL_tecdatos <- tecdatos$y - predichos_ROB_LINEAL
 
 Residuals boxplots both for linear (FLM) and quadratic (FQM) robust fit
 are displayed below.
@@ -190,7 +326,86 @@ based on sample principal directions and least squares approach.
 As before, we choose 4 principal directions for the classic fit which
 explain more than 97% of the total variability, as seen below.
 
+    ####################################
+    ## LEAST SQUARE ESTIMATE UNDER A FLM
+    ####################################
+
+    est_CL_LINEAL <-
+      estimar(
+        y = tecdatos$y,
+        xcenter = tecdatos$x,
+        ttt = tecdatos$t,
+        ajuste = 'lineal',
+        freq = freq,
+        cov_type = 'cl',
+        fLoss = 'ls',
+        cterho = 3.443689,
+        nresamp = 5000,
+        varexp = varexp
+      )
+
+    ######################################
+    # Percentage explained by 4 directions
+    ######################################
+
+    est_CL_LINEAL$porcentaje
+
     ## [1] 0.9791543
+
+    #0.9791543
+
+    #################################
+    # Store the estimates and compute
+    # predictions for the residuals
+    #################################
+
+    beta_CL_LINEAL <- est_CL_LINEAL$beta
+    phies_CL_LINEAL <- est_CL_LINEAL$autofun
+
+    coef_CL_LINEAL <-   tecdatos$x %*% phies_CL_LINEAL * dt_tecdatos
+
+    predichos_CL_LINEAL <-
+      est_CL_LINEAL$alfa + coef_CL_LINEAL %*% est_CL_LINEAL$slope_coef
+
+    ####################################
+    ## LEAST SQUARE ESTIMATE UNDER A FQM
+    ####################################
+
+    est_CL_CUADRA <-
+      estimar(
+        y = tecdatos$y,
+        xcenter = tecdatos$x,
+        ttt = tecdatos$t,
+        ajuste = 'quadra',
+        freq = freq,
+        cov_type = 'cl',
+        fLoss = 'ls',
+        cterho = 3.443689,
+        nresamp = 5000,
+        varexp = varexp
+      )
+
+    #################################
+    # Store the estimates and compute
+    # predictions for the residuals
+    #################################
+
+    beta_CL_CUADRA <- est_CL_CUADRA$beta
+    gamma_CL_CUADRA <- est_CL_CUADRA$gamma
+    phies_CL <- est_CL_CUADRA$autofun
+
+    coef_CL_CUADRA <-   tecdatos$x %*% phies_CL * dt_tecdatos
+
+    predichos_CL_CUADRA <-
+      est_CL_CUADRA$alfa + coef_CL_CUADRA %*% est_CL_CUADRA$slope_coef + diag(coef_CL_CUADRA %*% est_CL_CUADRA$gama_coef %*% t(coef_CL_CUADRA))
+
+    #######################################
+    #  RESIDUALS FROM THE LEAST SQUARES FIT
+    #######################################
+
+    residuos_CL_CUADRA_tecdatos <- tecdatos$y - predichos_CL_CUADRA
+
+    residuos_CL_LINEAL_tecdatos <- tecdatos$y - predichos_CL_LINEAL
 
 The linear coefficient estimated from linear (FLM) classic fit, *β̂*, is
 displayed as the red curve below.
@@ -232,7 +447,96 @@ quadratic fit(these 32 observationes were manually removed). We will
 refer it as “CL without out”. Again, we choose 4 principal directions
 which explain more than 97% of the variability as seen below.
 
+    ############################
+    ## Data without outliers
+    ############################
+
+    tecdatos_sin_out <-
+      submuestra(indices_tecdatos[-atipicos_CUADRA_tecdatos], covariable = covariable)
+
+    #######################################
+    ## CLASSICAL ESTIMATOR WITHOUT OULTIERS
+    ## FLM
+    #######################################
+
+    est_CL_LINEAL_sin_out <-
+      estimar(
+        y = tecdatos_sin_out$y,
+        xcenter = tecdatos_sin_out$x,
+        ttt = tecdatos_sin_out$t,
+        ajuste = 'lineal',
+        freq = freq,
+        cov_type = 'cl',
+        fLoss = 'ls',
+        cterho = 3.443689,
+        nresamp = 5000,
+        varexp = varexp
+      )
+
+    est_CL_LINEAL_sin_out$porcentaje
+
     ## [1] 0.9774696
+
+    #0.9774696
+
+    ###############################################
+    # Store parameters and compute predicted values
+    ###############################################
+
+    beta_CL_LINEAL_sin_out <- est_CL_LINEAL_sin_out$beta
+    phies_CL_LINEAL_sin_out <- est_CL_LINEAL_sin_out$autofun
+
+    coef_CL_LINEAL_sin_out <-
+      tecdatos_sin_out$x %*% phies_CL_LINEAL_sin_out * dt_tecdatos
+
+    predichos_CL_LINEAL_sin_out <-
+      est_CL_LINEAL_sin_out$alfa + coef_CL_LINEAL_sin_out %*% est_CL_LINEAL_sin_out$slope_coef
+
+    #######################################
+    ## CLASSICAL ESTIMATOR WITHOUT OULTIERS
+    ## FQM
+    #######################################
+
+    est_CL_CUADRA_sin_out <-
+      estimar(
+        y = tecdatos_sin_out$y,
+        xcenter = tecdatos_sin_out$x,
+        ttt = tecdatos_sin_out$t,
+        ajuste = 'quadra',
+        freq = freq,
+        cov_type = 'cl',
+        fLoss = 'ls',
+        cterho = 3.443689,
+        nresamp = 5000,
+        varexp = varexp
+      )
+
+    ###############################################
+    # Store parameters and compute predicted values
+    ###############################################
+
+    beta_CL_CUADRA_sin_out <- est_CL_CUADRA_sin_out$beta
+    gamma_CL_CUADRA_sin_out <- est_CL_CUADRA_sin_out$gamma
+    phies_CL_sin_out <- est_CL_CUADRA_sin_out$autofun
+
+    coef_CL_CUADRA_sin_out <-
+      tecdatos_sin_out$x %*% phies_CL_sin_out * dt_tecdatos
+
+    predichos_CL_CUADRA_sin_out <-
+      est_CL_CUADRA_sin_out$alfa + coef_CL_CUADRA_sin_out %*% est_CL_CUADRA_sin_out$slope_coef +
+      diag(
+        coef_CL_CUADRA_sin_out %*% est_CL_CUADRA_sin_out$gama_coef %*% t(coef_CL_CUADRA_sin_out)
+      )
+
+    ####################################################
+    ## RESIDUALS FROM THE CLASSICAL FIT WITHOUT OUTLIERS
+    ####################################################
+
+    residuos_CL_CUADRA_tecdatos_sin_out <-
+      tecdatos_sin_out$y - predichos_CL_CUADRA_sin_out
+
+    residuos_CL_LINEAL_tecdatos_sin_out <-
+      tecdatos_sin_out$y - predichos_CL_LINEAL_sin_out
 
 Predicted vs residuals plots in the linear (FLM) and quadratic (FQM)
 classic without outliers (CL without out) fit are shown in the first
