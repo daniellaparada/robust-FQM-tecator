@@ -93,7 +93,7 @@ Functional Linear Model (FLM): $$y=\alpha+\langle X,\beta\rangle+\epsilon$$
 
 Functional Quadratic Model (FQM): $$y=\alpha+\langle X,\beta\rangle+\langle X,\Upsilon X\rangle+ \epsilon$$
 
-Various aspects of the functional linear model including implementations and asymptotic theory, have been studied among others in Cardot et al. (2003), Shen and Faraway (2004), Cardot and Sarda (2005), Cai and Hall (2006), Hall and Horowitz (2007), Febrero-Bande et al. (2017) and Reiss et al. (2017). Yao and Müller (2010) and Horvath and Reeder (2013) considered that this linear model imposes a constraint on the regression relationship that may be too restrictive for some applications. To preserve a reasonable structural constraint, but at the same time improving the model flexibility within the class of parametric models, Yao and Muller (2010) defined a functional polynomial model analogous to the extension from simple linear regression to polynomial regression. As in functional linear regression, regularization is key step to define the estimators. For that reason, Yao and Müller (2010) and Horvath and Reeder (2013) project the predictor on the eigenfunctions basis of the process, which is then truncated at a reasonable number of included components, leading to a parsimonious
+Various aspects of the functional linear model including implementations and asymptotic theory, have been studied among others in Cardot et al. (2003), Shen and Faraway (2004), Cardot and Sarda (2005), Cai and Hall (2006), Hall and Horowitz (2007), Febrero-Bande et al. (2017) and Reiss et al. (2017). Yao and Müller (2010) and Horvath and Reeder (2013) considered that this linear model imposes a constraint on the regression relationship that may be too restrictive for some applications. To preserve a reasonable structural constraint, but at the same time improving the model flexibility within the class of parametric models, Yao and Müller (2010) defined a functional polynomial model analogous to the extension from simple linear regression to polynomial regression. As in functional linear regression, regularization is key step to define the estimators. For that reason, Yao and Müller (2010) and Horvath and Reeder (2013) project the predictor on the eigenfunctions basis of the process, which is then truncated at a reasonable number of included components, leading to a parsimonious
 representation. With this representation, Yao and Müller (2010) have shown that the functional polynomial regression model can be represented as a polynomial regression model in the functional principal component scores of the predictor process.
 
 In this real data example, our purpose is to estimate the linear coefficient $\beta$ and the quadratic kernel $\upsilon$ related to the $\Upsilon$ operator in the quadratic model (FQM). In that sense, we choose 4 principal directions which explain more than 98% of the total variability as seen below, and provide a robust fit that involves robust estimators of the principal directions with robust regression estimators based on a bounded loss function and a preliminary residual scale estimator.
@@ -195,7 +195,8 @@ phies_rob <- est_rob_CUADRA$autofun
 coef_rob_CUADRA <-   tecdatos$x %*% phies_rob * dt_tecdatos
 
 predichos_ROB_CUADRA <-
-  est_rob_CUADRA$alfa + coef_rob_CUADRA %*% est_rob_CUADRA$slope_coef + diag(coef_rob_CUADRA %*% est_rob_CUADRA$gama_coef %*% t(coef_rob_CUADRA))
+  est_rob_CUADRA$alfa + coef_rob_CUADRA %*% est_rob_CUADRA$slope_coef + 
+  diag(coef_rob_CUADRA %*% est_rob_CUADRA$gama_coef %*% t(coef_rob_CUADRA))
 
 ################################
 ## Residuals from the robust fit
@@ -431,7 +432,8 @@ phies_CL <- est_CL_CUADRA$autofun
 coef_CL_CUADRA <-   tecdatos$x %*% phies_CL * dt_tecdatos
 
 predichos_CL_CUADRA <-
-  est_CL_CUADRA$alfa + coef_CL_CUADRA %*% est_CL_CUADRA$slope_coef + diag(coef_CL_CUADRA %*% est_CL_CUADRA$gama_coef %*% t(coef_CL_CUADRA))
+  est_CL_CUADRA$alfa + coef_CL_CUADRA %*% est_CL_CUADRA$slope_coef + 
+  diag(coef_CL_CUADRA %*% est_CL_CUADRA$gama_coef %*% t(coef_CL_CUADRA))
 
 #######################################
 #  RESIDUALS FROM THE LEAST SQUARES FIT

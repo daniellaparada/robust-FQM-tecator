@@ -116,7 +116,7 @@ considered that this linear model imposes a constraint on the regression
 relationship that may be too restrictive for some applications. To
 preserve a reasonable structural constraint, but at the same time
 improving the model flexibility within the class of parametric models,
-Yao and Muller (2010) defined a functional polynomial model analogous to
+Yao and Müller (2010) defined a functional polynomial model analogous to
 the extension from simple linear regression to polynomial regression. As
 in functional linear regression, regularization is key step to define
 the estimators. For that reason, Yao and Müller (2010) and Horvath and
@@ -238,7 +238,8 @@ bounded loss function and a preliminary residual scale estimator.
     coef_rob_CUADRA <-   tecdatos$x %*% phies_rob * dt_tecdatos
 
     predichos_ROB_CUADRA <-
-      est_rob_CUADRA$alfa + coef_rob_CUADRA %*% est_rob_CUADRA$slope_coef + diag(coef_rob_CUADRA %*% est_rob_CUADRA$gama_coef %*% t(coef_rob_CUADRA))
+      est_rob_CUADRA$alfa + coef_rob_CUADRA %*% est_rob_CUADRA$slope_coef + 
+      diag(coef_rob_CUADRA %*% est_rob_CUADRA$gama_coef %*% t(coef_rob_CUADRA))
 
     ################################
     ## Residuals from the robust fit
@@ -397,7 +398,8 @@ explain more than 97% of the total variability, as seen below.
     coef_CL_CUADRA <-   tecdatos$x %*% phies_CL * dt_tecdatos
 
     predichos_CL_CUADRA <-
-      est_CL_CUADRA$alfa + coef_CL_CUADRA %*% est_CL_CUADRA$slope_coef + diag(coef_CL_CUADRA %*% est_CL_CUADRA$gama_coef %*% t(coef_CL_CUADRA))
+      est_CL_CUADRA$alfa + coef_CL_CUADRA %*% est_CL_CUADRA$slope_coef + 
+      diag(coef_CL_CUADRA %*% est_CL_CUADRA$gama_coef %*% t(coef_CL_CUADRA))
 
     #######################################
     #  RESIDUALS FROM THE LEAST SQUARES FIT
