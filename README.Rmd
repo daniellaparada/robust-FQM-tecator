@@ -63,13 +63,12 @@ par(mfrow=c(1,2))
 fd0<-fbplot(t(absorp$data), x = absorp$argvals, method = "MBD",
        xlab = "Wavelength", ylab = "Absorbance",
        xlim = c(850, 1050), ylim = c(2, 5.5))
-par(mfrow=c(1,1))
-
 
 # First derivative
 fd1 <- fbplot(t(absorp1$data), x = absorp1$argvals, method =  "MBD",
        xlab = "Wavelength", ylab = "d(Absorbance, 1)",
        xlim = c(850, 1050), ylim = c(-0.02, 0.05))
+par(mfrow=c(1,1))
 ```
 
 
@@ -88,7 +87,7 @@ For the functional regression model, we consider two relationships between the f
 
 Functional Linear Model (FLM): $$y=\alpha+\langle X,\beta\rangle+\epsilon$$
 
-Functional Quadratic Model (FQM): $$y=\alpha+\langle X,\beta\rangle+\langle X,\mupUpsilon X\rangle+ \epsilon$$
+Functional Quadratic Model (FQM): $$y=\alpha+\langle X,\beta\rangle+\langle X,\Upsilon X\rangle+ \epsilon$$
 
 In this real data example, our purpose is to estimate the linear coefficient $\beta$ and the quadratic kernel $\upsilon$ related to the $\Upsilon$ operator in the quadratic model (FQM). In that sense, we choose 4 principal directions which explain more than 98% of the total variability as seen below, and provide a robust fit that involves robust estimators of the principal directions with robust regression estimators based on a bounded loss function and a preliminary residual scale estimator.
 
