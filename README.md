@@ -81,10 +81,10 @@ Functional Linear Model (FLM):
 *y* = *α* + ⟨*X*, *β*⟩ + *ϵ*
 
 Functional Quadratic Model (FQM):
-*y* = *α* + ⟨*X*, *β*⟩ + ⟨*X*, *Υ**X*⟩ + *ϵ*
+*y* = *α* + ⟨*X*, *β*⟩ + ⟨*X*, *𝛶**X*⟩ + *ϵ*
 
 In this real data example, our purpose is to estimate the linear
-coefficient *β* and the quadratic kernel *υ* related to the *Υ* operator
+coefficient *β* and the quadratic kernel *υ* related to the *𝛶* operator
 in the quadratic model (FQM). In that sense, we choose 4 principal
 directions which explain more than 98% of the total variability as seen
 below, and provide a robust fit that involves robust estimators of the
