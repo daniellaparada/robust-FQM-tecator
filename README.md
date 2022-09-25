@@ -1,6 +1,6 @@
 # Introduction
 
-This page contains the <code>R<code> code to compute the robust
+This page contains the <code>R</code> code to compute the robust
 estimates for functional quadratic models defined in *Robust estimation
 for functional quadratic regression models* (available at
 <https://arxiv.org/abs/2209.02742>). The following is a real data
