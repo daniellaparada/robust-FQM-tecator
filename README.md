@@ -81,7 +81,7 @@ Functional Linear Model (FLM):
 *y* = *α* + ⟨*X*, *β*⟩ + *ϵ*
 
 Functional Quadratic Model (FQM):
-*y* = *α* + ⟨*X*, *β*⟩ + ⟨*X*, *Υ**X*⟩ + *ϵ*
+*y* = *α* + ⟨*X*, *β*⟩ + ⟨*X*, *Υ* *X*⟩ + *ϵ*
 
 In this real data example, our purpose is to estimate the linear
 coefficient *β* and the quadratic kernel *υ* related to the *Υ* operator
