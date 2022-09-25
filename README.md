@@ -413,9 +413,9 @@ provide a reasonable fit for the classical method either.
 
 We now compute the classical least squares estimates with the data set
 without the detected potential outliers using a quadratic model assuming
-a linear (FLM) and quadratic (FQM) model. We will refer it as “CL
-without out”. Again, we choose 4 principal directions which explain more
-than 97% of the variability as seen below.
+a quadratic (FQM) model. We will refer it as “CL without out”. Again, we
+choose 4 principal directions which explain more than 97% of the
+variability as seen below.
 
     ############################
     ## Data without outliers
