@@ -1,0 +1,157 @@
+%%^^A%% um-code-compat.dtx -- part of UNICODE-MATH <wspr.io/unicode-math>
+%%^^A%% Compatibility with 3rd party packages.
+
+% \section{Compatibility}
+%
+%    \begin{macrocode}
+%<*package>
+%    \end{macrocode}
+%
+%
+% \section{Patching/augmenting 3rd-party packages}
+%
+% \subsection{\pkg{url}}
+% Here we need to get \pkg{url} in a state such that
+% when it switches to math mode and enters \ascii\ characters, the maths
+% setup (i.e., \pkg{unicode-math}) doesn't remap the symbols into Plane 1.
+% Which is what \cs{symliteral} is intended to do.
+% This is the same as writing, e.g., |\def\UrlFont{\ttfamily\@@_switch_to:n{literal}}|
+% but activates automatically so documents that might change the \cs{url}
+% font through the standard interface still work correctly.
+%    \begin{macrocode}
+\@@_after_package:nNn {url} \@@_patch_url:
+  {
+    \tl_put_left:Nn \Url@FormatString { \@@_switch_to:n {literal} }
+    \tl_put_right:Nn \UrlSpecials
+      {
+        \do \` { \mathchar`\` }
+        \do \' { \mathchar`\' }
+        \do \$ { \mathchar`\$ }
+        \do \& { \mathchar`\& }
+      }
+  }
+%    \end{macrocode}
+%
+%
+% \subsection{\pkg{mathtools}}
+%
+% \pkg{mathtools}’s |\cramped| command and others that make use of its internal version use an incorrect font dimension.
+%
+% The \XeTeX\ version is pretty similar to the legacy version, only using the correct font dimensions.
+% Note we used `\verb|\XeTeXradical|' with the family 255 to be almost sure
+% that the radical rule width is not set. Former use of `\verb|\newfam|' had an
+% upsetting effect on legacy math alphabets.
+%    \begin{macrocode}
+%<*XE>
+\@@_after_package:nNn { mathtools } \@@_patch_mathtools_A:
+  {
+    \cs_set_nopar:Npn \MT_cramped_internal:Nn ##1 ##2
+     {
+       \hbox_set:Nn \l_tmpa_box
+         {
+           \color@setgroup \c_math_toggle_token \m@th
+             ##1
+             \dim_zero:N \nulldelimiterspace
+             \XeTeXradical 255 ~ 0 ~ { ##2 }
+           \c_math_toggle_token \color@endgroup
+         }
+       \box_set_ht:Nn \l_tmpa_box
+         {
+           \box_ht:N \l_tmpa_box - \@@_radical_vgap:N ##1
+         }
+       \box_use_drop:N \l_tmpa_box
+     }
+  }
+%</XE>
+%    \end{macrocode}
+%
+% \begin{macro}{\overbracket}
+% \begin{macro}{\underbracket}
+%   \pkg{mathtools}’s |\overbracket| and |\underbracket| take optional
+%   arguments and are defined in terms of rules, so we keep them, and rename
+%   ours to |\Uoverbracket| and |\Uunderbracket|.
+%
+%   Original definition used the height of |\braceld| which is not available
+%   with Unicode fonts, so we are hard coding the $5/18$ex suggested by
+%   \pkg{mathtools}’s documentation.
+%    \begin{macrocode}
+\@@_after_package:nNn { mathtools } \@@_patch_mathtools_B:
+  {
+    \cs_set_eq:NN \MToverbracket  \overbracket
+    \cs_set_eq:NN \MTunderbracket \underbracket
+
+    \AtBeginDocument
+      {
+        \msg_warning:nn { unicode-math } { mathtools-overbracket }
+
+    	  \cs_set:Npn \downbracketfill ##1 ##2
+	        {
+            \tl_set:Nn \l_MT_bracketheight_fdim {.27ex}
+            \downbracketend {##1} {##2}
+            \leaders \vrule \@height ##1 \@depth \z@ \hfill
+            \downbracketend {##1} {##2}
+          }
+
+	      \cs_set:Npn \upbracketfill ##1 ##2
+	        {
+            \tl_set:Nn \l_MT_bracketheight_fdim {.27ex}
+            \upbracketend {##1} {##2}
+            \leaders \vrule \@height \z@ \@depth ##1 \hfill
+            \upbracketend {##1} {##2}
+          }
+
+	      \cs_set_eq:NN \Uoverbracket  \overbracket
+	      \cs_set_eq:NN \Uunderbracket \underbracket
+        \cs_set_eq:NN \overbracket   \MToverbracket
+        \cs_set_eq:NN \underbracket  \MTunderbracket
+     }
+  }
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\dblcolon}
+% \begin{macro}{\coloneqq}
+% \begin{macro}{\Coloneqq}
+% \begin{macro}{\eqqcolon}
+%   \pkg{mathtools} defines several commands as combinations of colons and
+%   other characters, but with meanings incompatible to \pkg{unicode-math}.
+%   Thus we issue a warning.  Note \pkg{mathtools} uses
+%   \cmd{\providecommand} \cmd{\AtBeginDocument}.
+%    \begin{macrocode}
+\@@_after_package:nNn { mathtools } \@@_patch_mathtools_C:
+  {
+    \msg_warning:nn { unicode-math } { mathtools-colon }
+    \DeclareDocumentCommand \dblcolon { } { \Colon }
+    \DeclareDocumentCommand \coloneqq { } { \coloneq }
+    \DeclareDocumentCommand \Coloneqq { } { \Coloneq }
+    \DeclareDocumentCommand \eqqcolon { } { \eqcolon }
+  }
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+%    \begin{macrocode}
+%</package>
+%    \end{macrocode}
+
+\endinput
+
+% /©
+%
+% ------------------------------------------------
+% The UNICODE-MATH package  <wspr.io/unicode-math>
+% ------------------------------------------------
+% This package is free software and may be redistributed and/or modified under
+% the conditions of the LaTeX Project Public License, version 1.3c or higher
+% (your choice): <http://www.latex-project.org/lppl/>.
+% ------------------------------------------------
+% Copyright 2006-2019  Will Robertson, LPPL "maintainer"
+% Copyright 2010-2017  Philipp Stephani
+% Copyright 2011-2017  Joseph Wright
+% Copyright 2012-2015  Khaled Hosny
+% ------------------------------------------------
+%
+% ©/
