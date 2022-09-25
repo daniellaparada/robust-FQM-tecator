@@ -1,43 +1,19 @@
 # Introduction
 
-As it is well known, small proportions of outliers and other atypical
-observations can affect seriously the estimators for regression models,
-and the situation in functional linear or quadratic models is not an
-exception. In fact, different types of outliers may arise when
-considering functional data: in the functional setting, atypical data
-might consist of curves that behave differently from the others
-displaying a persistent behaviour either in shift, amplitude and/or
-shape making more difficult their detection.
-
-The following is a real data example of the implementation of robust
-estimators for functional quadratic regression models. This robust
-proposal involves robust estimators of the principal directions with
-robust regression estimators based on a bounded loss function and a
-preliminary residual scale estimator. This is part of a work in progress
-done in collaboration with Prof. Dra. Graciela Boente \[Boente, G. and
-Parada, D. (2022). *Robust estimation for functional quadratic
-regression models*. Available at <https://arxiv.org/abs/2209.02742>.\]
+This page contains the <code>R<code> code to compute the robust
+estimates for functional quadratic models defined in *Robust estimation
+for functional quadratic regression models* (available at
+<https://arxiv.org/abs/2209.02742>). The following is a real data
+example of the implementation of robust estimators for functional
+quadratic regression models. This robust proposal involves robust
+estimators of the principal directions with robust regression estimators
+based on a bounded loss function and a preliminary residual scale
+estimator.
 
 More precisely, we first compute robust estimators of the principal
 directions with the aim of providing finite-dimensional candidates for
 the estimators of both the functional regression parameter and the
-quadratic operator. We then apply MM–regression estimators (Yohai, 1987)
-that are based on a bounded loss function and a preliminary residual
-scale estimator to the residuals obtained from these finite-dimensional
-spaces. The initial scale estimator ensures that the estimators of the
-functional regression parameter and the quadratic operator are scale
-equivariant, while the bounded loss function and the robust principal
-directions guarantee that the resulting procedure will be robust against
-high-leverage outliers. It is worth mentioning that the presence of
-outliers in the functional covariates may affect the estimation
-procedure when the sample principal components are used to estimate the
-regression function and quadratic operator, even when MM-estimators are
-used. The main reason is that a distorted estimator of the principal
-direction will affect the scores of all the observations in that
-direction, that is why robust estimators of the principal direction are
-needed. We consider the spherical principal components introduced in
-Locantore et al. (1999) and studied in Gervini (2008), Boente et
-al. (2014) and Boente et al. (2019).
+quadratic operator and we then apply MM–regression estimators.
 
 # Real data example: Tecator
 
@@ -87,7 +63,7 @@ Functional boxplots of the spectrometric data and it’s first derivative
 are displayed below. In both cases, only few observations are detected
 as atypical even though is a well-known dataset which atypical data.
 
-![](README_files/figure-markdown_strict/functional%20boxplots-1.png)
+![](README_files/figure-markdown_strict/functional%20boxplots-1.png)![](README_files/figure-markdown_strict/functional%20boxplots-2.png)
 
 From now on, we will consider the first derivative of the spectrometric
 curve, which we denote by *X*, as the functional explanatory variable
@@ -107,27 +83,6 @@ Functional Linear Model (FLM):
 Functional Quadratic Model (FQM):
 *y* = *α* + ⟨*X*, *β*⟩ + ⟨*X*, *Υ**X*⟩ + *ϵ*
 
-Various aspects of the functional linear model including implementations
-and asymptotic theory, have been studied among others in Cardot et
-al. (2003), Shen and Faraway (2004), Cardot and Sarda (2005), Cai and
-Hall (2006), Hall and Horowitz (2007), Febrero-Bande et al. (2017) and
-Reiss et al. (2017). Yao and Müller (2010) and Horvath and Reeder (2013)
-considered that this linear model imposes a constraint on the regression
-relationship that may be too restrictive for some applications. To
-preserve a reasonable structural constraint, but at the same time
-improving the model flexibility within the class of parametric models,
-Yao and Müller (2010) defined a functional polynomial model analogous to
-the extension from simple linear regression to polynomial regression. As
-in functional linear regression, regularization is key step to define
-the estimators. For that reason, Yao and Müller (2010) and Horvath and
-Reeder (2013) project the predictor on the eigenfunctions basis of the
-process, which is then truncated at a reasonable number of included
-components, leading to a parsimonious representation. With this
-representation, Yao and Müller (2010) have shown that the functional
-polynomial regression model can be represented as a polynomial
-regression model in the functional principal component scores of the
-predictor process.
-
 In this real data example, our purpose is to estimate the linear
 coefficient *β* and the quadratic kernel *υ* related to the *Υ* operator
 in the quadratic model (FQM). In that sense, we choose 4 principal
@@ -135,6 +90,20 @@ directions which explain more than 98% of the total variability as seen
 below, and provide a robust fit that involves robust estimators of the
 principal directions with robust regression estimators based on a
 bounded loss function and a preliminary residual scale estimator.
+
+    # y = vector of scalar responses = fat ;
+    # x = matrix of functional covariates ;
+    # ttt= the grid over which the functional covariates were evaluated;
+
+    # freq = the number of principal directions used;
+    # or
+    # varexp := the percentage of explained variability;
+
+    # cov_type = type of estimates for the estimate for the principal directions;
+    #           'cl' for classical or
+    #           'gerS' for robust (Gervini, 2008) with S-ordering 
+
+    # fLoss = the loss function to be minimized ('ls' or 'lmrob'); 
 
     set.seed(124)
     covariable <- 'd1' # first derivative
@@ -162,7 +131,7 @@ bounded loss function and a preliminary residual scale estimator.
 
     est_rob_LINEAL <- estimar(
       y = tecdatos$y,
-      xcenter = tecdatos$x,
+      x = tecdatos$x,
       ttt = tecdatos$t,
       ajuste = 'lineal',
       freq = freq,
@@ -205,7 +174,7 @@ bounded loss function and a preliminary residual scale estimator.
     est_rob_CUADRA <-
       estimar(
         y = tecdatos$y,
-        xcenter = tecdatos$x,
+        x = tecdatos$x,
         ttt = tecdatos$t,
         ajuste = 'quadra',
         freq = freq,
@@ -289,21 +258,21 @@ red dashed lines.
 
 ![](README_files/figure-markdown_strict/robust%20est%20atypical%20curves-1.png)
 
-The linear coefficient estimated from linear (FLM) robust fit, *β̂*, is
+The linear coefficient estimated from a linear (FLM) robust fit is
 displayed as the red curve below.
 
 ![](README_files/figure-markdown_strict/robust%20est%20beta%20FLM-1.png)
 
-The estimated parameters *β̂* and *υ̂* from the quadratic (FQM) robust fit
-are displayed below as the blue curve and the coloured surface,
-respectively.
+The estimates of the parameters *β* and *υ* obtained from the quadratic
+(FQM) robust fit are displayed below as the blue curve and the coloured
+surface, respectively.
 
 ![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-1.png)![](README_files/figure-markdown_strict/robust%20est%20beta%20gamma%20FQM-2.png)
 
-We can now compare both *β* estimators from linear (FLM) and quadratic
-(FQM) robust fit. As seen below, the shape is quite similar, but when
-quadratic model is considered, the linear estimator take larger absolute
-values for wavelengths varying between 880 and 980 nm.
+We can now compare *β* estimators obtained from a linear (FLM) and
+quadratic (FQM) robust fit. As seen below, the shape is quite similar,
+but when quadratic model is considered, the estimator takes larger
+absolute values for wavelengths varying between 880 and 980 nm.
 
 ![](README_files/figure-markdown_strict/robust%20est%20betas-1.png)
 
@@ -317,14 +286,14 @@ robust quadratic fit, some atypical residuals are revealed.
 
 ![](README_files/figure-markdown_strict/robust%20est6-1.png)
 
-# Classic Estimators under a Functional Linear/Quadratic Model and comparison between their robust counterparts
+# Classical Estimators under a Functional Linear/Quadratic Model and comparison between their robust counterparts
 
 We now want to compare the robust estimators with the ones obtained when
 using a classical procedure for both linear (FLM) and quadratic (FQM)
 model. We refer to “classical procedure” as the estimation procedure
 based on sample principal directions and least squares approach.
 
-As before, we choose 4 principal directions for the classic fit which
+As before, we choose 4 principal directions for the classical fit which
 explain more than 97% of the total variability, as seen below.
 
     ####################################
@@ -334,7 +303,7 @@ explain more than 97% of the total variability, as seen below.
     est_CL_LINEAL <-
       estimar(
         y = tecdatos$y,
-        xcenter = tecdatos$x,
+        x = tecdatos$x,
         ttt = tecdatos$t,
         ajuste = 'lineal',
         freq = freq,
@@ -375,7 +344,7 @@ explain more than 97% of the total variability, as seen below.
     est_CL_CUADRA <-
       estimar(
         y = tecdatos$y,
-        xcenter = tecdatos$x,
+        x = tecdatos$x,
         ttt = tecdatos$t,
         ajuste = 'quadra',
         freq = freq,
@@ -409,45 +378,44 @@ explain more than 97% of the total variability, as seen below.
 
     residuos_CL_LINEAL_tecdatos <- tecdatos$y - predichos_CL_LINEAL
 
-The linear coefficient estimated from linear (FLM) classic fit, *β̂*, is
+The linear coefficient estimated from linear (FLM) classical fit is
 displayed as the red curve below.
 
 ![](README_files/figure-markdown_strict/classic%20est%20beta%20FLM-1.png)
 
-We can now compare *β* estimates in the linear model (FLM) for both
-classic (CL) and robust (ROB) fit. As seen beofre, the shape is quite
-similar, but when robust fit is considered, the linear estimator take
-larger absolute values for wavelengths varying between 910 and 960 nm.
+We can now compare *β* estimates in the linear model (FLM) using the
+classical (CL) and robust (ROB) fit. As seen before, the shape is quite
+similar, but the estimates of *β* under the robust fit take larger
+absolute values for wavelengths varying between 910 and 960 nm.
 
 ![](README_files/figure-markdown_strict/robvsclas%20est%20beta%20FLM-1.png)
 
-The estimated parameters *β̂* and *υ̂* from the quadratic (FQM) classic
-fit are displayed below as the red curve and the coloured surface,
-respectively.
+The estimates of *β* and *υ* from the quadratic (FQM) classical fit are
+displayed below as the red curve and the coloured surface, respectively.
 
 ![](README_files/figure-markdown_strict/classic%20est%20beta%20gamma%20FQM-1.png)![](README_files/figure-markdown_strict/classic%20est%20beta%20gamma%20FQM-2.png)
 
-We can now compare *β* estimates in the quadratic model (FQM) between
-classic (CL) and robust (ROB) fit. As seen below, the shape is quite
-similar, but when robust fit is considered, the linear estimator take
-larger absolute values for wavelengths varying between 900 and 980 nm.
+We can now compare the estimates of the slope *β* obtained by the least
+squares (CL) and robust preocedures (ROB) under the quadratic model
+(FQM). As seen below, the shape is quite similar, but when robust fit is
+considered, the robust estimator takes larger absolute values for
+wavelengths varying between 900 and 980 nm.
 
 ![](README_files/figure-markdown_strict/robvsclas%20est%20beta%20FQM-1.png)
 Residual vs predicted plots, both for linear (FLM) and quadratic (FQM)
-model in the classic fit are displayed below. These residual plots show,
-again, that the functional linear model (FLM) does not seem to provide a
-reasonable fit for the classical method either.
+model using the classical fit are displayed below. These residual plots
+show, again, that the functional linear model (FLM) does not seem to
+provide a reasonable fit for the classical method either.
 
 ![](README_files/figure-markdown_strict/classic%20est6-1.png)
 
 # Analysis without outliers
 
-We now repeat the classical analysis, both for linear (FLM) and
-quadratic (FQM) model, computed without the detected potential outliers
-that have been identified in the residual boxplot from the robust
-quadratic fit(these 32 observationes were manually removed). We will
-refer it as “CL without out”. Again, we choose 4 principal directions
-which explain more than 97% of the variability as seen below.
+We now compute the classical least squares estimates with the data set
+without the detected potential outliers using a quadratic model assuming
+a linear (FLM) and quadratic (FQM) model. We will refer it as “CL
+without out”. Again, we choose 4 principal directions which explain more
+than 97% of the variability as seen below.
 
     ############################
     ## Data without outliers
@@ -458,51 +426,13 @@ which explain more than 97% of the variability as seen below.
 
     #######################################
     ## CLASSICAL ESTIMATOR WITHOUT OULTIERS
-    ## FLM
-    #######################################
-
-    est_CL_LINEAL_sin_out <-
-      estimar(
-        y = tecdatos_sin_out$y,
-        xcenter = tecdatos_sin_out$x,
-        ttt = tecdatos_sin_out$t,
-        ajuste = 'lineal',
-        freq = freq,
-        cov_type = 'cl',
-        fLoss = 'ls',
-        cterho = 3.443689,
-        nresamp = 5000,
-        varexp = varexp
-      )
-
-    est_CL_LINEAL_sin_out$porcentaje
-
-    ## [1] 0.9774696
-
-    #0.9774696
-
-    ###############################################
-    # Store parameters and compute predicted values
-    ###############################################
-
-    beta_CL_LINEAL_sin_out <- est_CL_LINEAL_sin_out$beta
-    phies_CL_LINEAL_sin_out <- est_CL_LINEAL_sin_out$autofun
-
-    coef_CL_LINEAL_sin_out <-
-      tecdatos_sin_out$x %*% phies_CL_LINEAL_sin_out * dt_tecdatos
-
-    predichos_CL_LINEAL_sin_out <-
-      est_CL_LINEAL_sin_out$alfa + coef_CL_LINEAL_sin_out %*% est_CL_LINEAL_sin_out$slope_coef
-
-    #######################################
-    ## CLASSICAL ESTIMATOR WITHOUT OULTIERS
     ## FQM
     #######################################
 
     est_CL_CUADRA_sin_out <-
       estimar(
         y = tecdatos_sin_out$y,
-        xcenter = tecdatos_sin_out$x,
+        x = tecdatos_sin_out$x,
         ttt = tecdatos_sin_out$t,
         ajuste = 'quadra',
         freq = freq,
@@ -537,15 +467,12 @@ which explain more than 97% of the variability as seen below.
     residuos_CL_CUADRA_tecdatos_sin_out <-
       tecdatos_sin_out$y - predichos_CL_CUADRA_sin_out
 
-    residuos_CL_LINEAL_tecdatos_sin_out <-
-      tecdatos_sin_out$y - predichos_CL_LINEAL_sin_out
-
 Predicted vs residuals plots in the linear (FLM) and quadratic (FQM)
-classic without outliers (CL without out) fit are shown in the first
+classical without outliers (CL without out) fit are shown in the first
 pair of plots.
 
 In the second pair of plots, we show estimated *β* parameters for
-classic (CL), robust (ROB) and classic after outliers removal (CL
+classical (CL), robust (ROB) and classical after outliers removal (CL
 without out) fit, both for linear (FLM) and quadratic (FQM) model. As
 seen below, when estimating the linear regression function *β*, the
 classical estimators computed without the detected potential outliers
@@ -553,19 +480,19 @@ are very close to the robust ones, that is, the robust estimator behaves
 similarly to the classical one if one were able to manually remove
 suspected outliers.
 
-![](README_files/figure-markdown_strict/plotscompar-1.png)![](README_files/figure-markdown_strict/plotscompar-2.png)
+![](README_files/figure-markdown_strict/plotscompar-1.png)
 
 Note that for both the linear coefficient *β* and the quadratic kernel
 *υ*, the shape of the classical estimators computed without the
 suspected atypical observations, resembles that of the robust ones. To
 visualize more clearly the similarity between the surfaces related to
 the quadratic kernel estimators, we present the surfaces differences
-between classic (CL) and robust (ROB) fit, and between classic without
-outliers (CL without out) and robust (ROB) fit, both for quadratic
-model. As seen below, when estimating the quadratic operator, the
-classical estimators computed without the detected potential outliers
-are very close to the robust ones, that is, the robust estimator behaves
-similarly to the classical one if one were able to manually remove
-suspected outliers.
+between classical (CL) and robust (ROB) fit, and between classical
+without outliers (CL without out) and robust (ROB) fit, both for
+quadratic model. As seen below, when estimating the quadratic operator,
+the classical estimators computed without the detected potential
+outliers are very close to the robust ones, that is, the robust
+estimator behaves similarly to the classical one if one were able to
+manually remove suspected outliers.
 
 ![](README_files/figure-markdown_strict/dif%20suf%20CL%20ROB-1.png)![](README_files/figure-markdown_strict/dif%20suf%20CL%20ROB-2.png)![](README_files/figure-markdown_strict/dif%20suf%20CL%20ROB-3.png)

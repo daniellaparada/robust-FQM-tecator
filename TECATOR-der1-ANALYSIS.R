@@ -121,7 +121,7 @@ varexp=1
 ## fat= alfa_0 + < absorp1, beta_0 > + epsilon
 ###############################################
 
-est_rob_LINEAL <- estimar(y= tecdatos$y,xcenter= tecdatos$x,  
+est_rob_LINEAL <- estimar(y= tecdatos$y,x= tecdatos$x,  
 			ttt= tecdatos$t, ajuste='lineal', freq=freq,  cov_type='gerS',  
 			fLoss='lmrob',cterho=3.443689, nresamp=5000, varexp=varexp) 
 
@@ -152,7 +152,7 @@ predichos_ROB_LINEAL <- est_rob_LINEAL$alfa + coef_rob_LINEAL%*% est_rob_LINEAL$
 ## fat= alfa_0 + < absorp1, beta_0 > + <absorp1, Upsilon_0 absorp1>+  epsilon
 #####################################################################################
 
-est_rob_CUADRA <- estimar(y= tecdatos$y,xcenter= tecdatos$x,  ttt= tecdatos$t, 
+est_rob_CUADRA <- estimar(y= tecdatos$y,x= tecdatos$x,  ttt= tecdatos$t, 
 			ajuste='quadra', freq=freq,  cov_type='gerS',  fLoss='lmrob',
 			cterho=3.443689, nresamp=5000, varexp=varexp) 
 
@@ -364,7 +364,7 @@ dev.off()
 ## LEAST SQUARE ESTIMATE UNDER FLM
 #######################################
 
-est_CL_LINEAL <- estimar(y= tecdatos$y,xcenter= tecdatos$x,  ttt= tecdatos$t, 
+est_CL_LINEAL <- estimar(y= tecdatos$y,x= tecdatos$x,  ttt= tecdatos$t, 
 			ajuste='lineal', freq=freq,  cov_type='cl',  fLoss='ls',cterho=3.443689, 
 			nresamp=5000, varexp=varexp) 
 
@@ -396,7 +396,7 @@ predichos_CL_LINEAL <- est_CL_LINEAL$alfa + coef_CL_LINEAL%*% est_CL_LINEAL$slop
 ## Estimador  CLASICO  CUADRATICO
 #######################################
 
-est_CL_CUADRA <- estimar(y= tecdatos$y,xcenter= tecdatos$x,  ttt= tecdatos$t, 
+est_CL_CUADRA <- estimar(y= tecdatos$y,x= tecdatos$x,  ttt= tecdatos$t, 
 			ajuste='quadra', freq=freq,  cov_type='cl',  
 			fLoss='ls',cterho=3.443689, nresamp=5000, varexp=varexp) 
 
@@ -592,7 +592,7 @@ tecdatos_sin_out <- submuestra(indices_tecdatos[-atipicos_CUADRA_tecdatos], cova
 ## FLM
 #######################################
 
-est_CL_LINEAL_sin_out <- estimar(y= tecdatos_sin_out$y,xcenter= tecdatos_sin_out$x,  ttt= tecdatos_sin_out$t, 
+est_CL_LINEAL_sin_out <- estimar(y= tecdatos_sin_out$y,x= tecdatos_sin_out$x,  ttt= tecdatos_sin_out$t, 
 				ajuste='lineal', freq=freq,  cov_type='cl',  fLoss='ls',cterho=3.443689, 
 				nresamp=5000, varexp=varexp) 
 
@@ -617,7 +617,7 @@ predichos_CL_LINEAL_sin_out <- est_CL_LINEAL_sin_out$alfa + coef_CL_LINEAL_sin_o
 ## FQM
 #######################################
 
-est_CL_CUADRA_sin_out <- estimar(y= tecdatos_sin_out$y,xcenter= tecdatos_sin_out$x,  
+est_CL_CUADRA_sin_out <- estimar(y= tecdatos_sin_out$y,x= tecdatos_sin_out$x,  
 				ttt= tecdatos_sin_out$t, 
 				ajuste='quadra', freq=freq,  cov_type='cl',  
 				fLoss='ls',cterho=3.443689, nresamp=5000, varexp=varexp) 

@@ -3,8 +3,8 @@
 ## -------------------------------------------------------
 ## INPUT
 ##
-## y	       :response
-## xcenter   : covariates
+## y	       : response
+## x	       : covariates
 ## ttt       : grid (equiespaced)
 ## freq      : Number of eigenfunctions to be considered
 ## varexp    : Percentage of variance explained, if varexp=1 the value of freq is taken as the number of PC
@@ -19,7 +19,7 @@
 
  
   
-estimar <- function (y,xcenter,  ttt, ajuste='lineal', freq=NULL,  cov_type,  fLoss,   cterho=3.443689, nresamp=5000, varexp=varexp){
+estimar <- function (y,x,  ttt, ajuste='lineal', freq=NULL,  cov_type,  fLoss,   cterho=3.443689, nresamp=5000, varexp=varexp){
   
   ## Some samples may be discarded...
    nn=length(y)
@@ -31,7 +31,7 @@ estimar <- function (y,xcenter,  ttt, ajuste='lineal', freq=NULL,  cov_type,  fL
   ################################
   # Decomposition and projection #
   #####################
-  cov_dec1 <- descomponer3(xcenter, dt, cov_type)
+  cov_dec1 <- descomponer3(x, dt, cov_type)
   autofun <- cov_dec1$autofun
   autoval <- cov_dec1$autoval
   	 
@@ -56,12 +56,13 @@ estimar <- function (y,xcenter,  ttt, ajuste='lineal', freq=NULL,  cov_type,  fL
   cov_dec[, 1:freq] <- autofun[, 1:freq] 
 
   ## Estimated coefficients (by row)
-  xx_coef <- xcenter %*% cov_dec * dt
+  xx_coef <- x %*% cov_dec * dt
   
   if(ajuste=='lineal'){
 	est <-  minimizar.lineal(y, xx_coef,   freq, fLoss, cterho=cterho, nresamp=nresamp) 
- 	######################################
-      ## Slope function estimate
+ 	
+	######################################
+  ## Slope function estimate
 	######################################
      	
 	est_slope_fun <- cov_dec %*% est$slope
@@ -82,7 +83,7 @@ estimar <- function (y,xcenter,  ttt, ajuste='lineal', freq=NULL,  cov_type,  fL
 
 
   if(ajuste=='quadra'){
-  	######################################
+  ######################################
 	## Estimated coefficients of the quadratic term
 	######################################
 
@@ -144,18 +145,18 @@ estimar <- function (y,xcenter,  ttt, ajuste='lineal', freq=NULL,  cov_type,  fL
 
 	lowerTriangle(gamma_coef, diag=FALSE,byrow=FALSE) <- aux 
 
-  	#####################################################################
+  #####################################################################
 	# Obtain the estimated kernel of the quadratic operator as
-  	# sum_{i} gamma[i,i] phi_i(t) phi_i (s)  + 2 sum_{i\ne j} gamma[i,j] phi_i(t) phi_j (s)
-  	# over the grid points  which are stored in cov_dec[,i] and cov_dec[,j]
-  	# leading to a  lt*lt matrix
+  # sum_{i} gamma[i,i] phi_i(t) phi_i (s)  + 2 sum_{i\ne j} gamma[i,j] phi_i(t) phi_j (s)
+  # over the grid points  which are stored in cov_dec[,i] and cov_dec[,j]
+  # leading to a  lt*lt matrix
 	# to ensure symmetry compute (vhat(t,s)+vhat(s,t))/2
-  	#####################################################################
+  #####################################################################
  
-  	est_gamma_fun <- cov_dec %*% gamma_coef %*% t(cov_dec) 
-  	est_gamma_fun <- (est_gamma_fun +t(est_gamma_fun ) )/2
+  est_gamma_fun <- cov_dec %*% gamma_coef %*% t(cov_dec) 
+  est_gamma_fun <- (est_gamma_fun +t(est_gamma_fun ) )/2
 
-		}
+	}
 
   	#################
   	## Save results #
