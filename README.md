@@ -63,7 +63,7 @@ Functional boxplots of the spectrometric data and it’s first derivative
 are displayed below. In both cases, only few observations are detected
 as atypical even though is a well-known dataset which atypical data.
 
-![](README_files/figure-markdown_strict/functional%20boxplots-1.png)![](README_files/figure-markdown_strict/functional%20boxplots-2.png)
+![](README_files/figure-markdown_strict/functional%20boxplots-1.png)
 
 From now on, we will consider the first derivative of the spectrometric
 curve, which we denote by *X*, as the functional explanatory variable
@@ -81,7 +81,7 @@ Functional Linear Model (FLM):
 *y* = *α* + ⟨*X*, *β*⟩ + *ϵ*
 
 Functional Quadratic Model (FQM):
-$$y=\alpha+\langle X,\beta\rangle+\langle X,\mupUpsilon X\rangle+ \epsilon$$
+*y* = *α* + ⟨*X*, *β*⟩ + ⟨*X*, *Υ**X*⟩ + *ϵ*
 
 In this real data example, our purpose is to estimate the linear
 coefficient *β* and the quadratic kernel *υ* related to the *Υ* operator
