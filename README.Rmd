@@ -9,7 +9,9 @@ output:
 
 # Introduction
 
-This page contains the <code>R</code> code to compute the robust estimates for functional quadratic models defined in _Robust estimation for functional quadratic regression models_ (available at https://arxiv.org/abs/2209.02742). The following is a real data example of the implementation of robust estimators for functional quadratic regression models. This robust proposal involves robust estimators of the principal directions with robust regression estimators based on a bounded loss function and a preliminary residual scale estimator.
+This page contains the <code>R</code> code to compute the robust estimates for functional quadratic models defined in [Boente, G. and Parada, D., _Robust estimation for functional quadratic regression models_ (2022)](https://arxiv.org/abs/2209.02742). The following code adapts the original code developed by Pablo Vena for robust estimators under a functional partially linear models (FPLM), check [here](https://github.com/msalibian/RobustFPLM) for the implementation using B-splines and MM-regression estimators.
+
+The following is a real data example of the implementation of robust estimators for functional quadratic regression models. This robust proposal involves robust estimators of the principal directions with robust regression estimators based on a bounded loss function and a preliminary residual scale estimator.
 
 More precisely, we first compute robust estimators of the principal directions with the aim of providing finite-dimensional candidates for the estimators of both the functional regression parameter and the quadratic operator and we then apply MM--regression estimators.
 
