@@ -3,11 +3,11 @@
 This page contains the <code>R</code> code to compute the robust
 estimates for functional quadratic models defined in [Boente, G. and
 Parada, D., *Robust estimation for functional quadratic regression
-models* (2022)](https://arxiv.org/abs/2209.02742). The following code
-adapts the original code developed by Pablo Vena for robust estimators
-under a functional partially linear models (FPLM), check
+models* (2022)](https://arxiv.org/abs/2209.02742) which adapts the
+original code developed by Pablo Vena for robust estimators under a
+functional partially linear models (FPLM), check
 [here](https://github.com/msalibian/RobustFPLM) for the implementation
-using B-splines and MM-regression estimators.
+using B–splines and MM–regression estimators.
 
 The following is a real data example of the implementation of robust
 estimators for functional quadratic regression models. This robust
@@ -22,16 +22,16 @@ quadratic operator and we then apply MM–regression estimators.
 
 # Real data example: Tecator
 
-We will use the Tecator data set available in the <code>fda.usc</code>
-library from <code>R</code>
-(<http://lib.stat.cmu.edu/datasets/tecator>). Each observation from this
-dataset consists of a spectrometric curve that corresponds to the
-absorbance measured on an equally spaced grid of 100 wavelengths between
-850 and 1050 nm. The spectrometric curves of these 215 samples of finely
-chopped meat were measured with Tecator Infratec Food and Feed Analyzer.
-The contents of fat protein and moisture were also recorded through
-analytic chemistry methods. The goal of the analysis is to predict the
-fat content (*y*) using some characteristics of the spectrometric curve.
+We will use the [Tecator](http://lib.stat.cmu.edu/datasets/tecator) data
+set available in the <code>fda.usc</code> library from <code>R</code>.
+Each observation from this dataset consists of a spectrometric curve
+that corresponds to the absorbance measured on an equally spaced grid of
+100 wavelengths between 850 and 1050 nm. The spectrometric curves of
+these 215 samples of finely chopped meat were measured with Tecator
+Infratec Food and Feed Analyzer. The contents of fat protein and
+moisture were also recorded through analytic chemistry methods. The goal
+of the analysis is to predict the fat content (*y*) using some
+characteristics of the spectrometric curve.
 
 To predict the fat content of a meat sample from its absorbance
 spectrum, Yao and Müller (2010) fitted a functional quadratic model,
