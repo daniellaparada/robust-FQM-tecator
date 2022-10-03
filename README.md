@@ -3,11 +3,13 @@
 This page contains the <code>R</code> code to compute the robust
 estimates for functional quadratic models defined in [Boente, G. and
 Parada, D. Robust estimation for functional quadratic regression models
-(2022)](https://arxiv.org/abs/2209.02742), which adapts the original
-code developed by Pablo Vena for robust estimators under a functional
-partially linear models (FPLM) \[see
-[here](https://github.com/msalibian/RobustFPLM) for the implementation
-using B–splines and MM–regression estimators\].
+(2022)](https://arxiv.org/abs/2209.02742). This code adapts to
+Functional Quadratic Models, the code to implement robust estimators
+under a Functional Partially Linear Model (FPLM), original developed by
+Pablo Vena in his [PhD.
+thesis](http://cms.dm.uba.ar/academico/carreras/doctorado/tesis_2019_10-06-corregidafinal.pdf).
+The implementation for FPLM based on B–splines and MM–regression
+estimators is available [here](https://github.com/msalibian/RobustFPLM).
 
 The following is a real data example of the implementation of robust
 estimators for functional quadratic regression models. This robust
