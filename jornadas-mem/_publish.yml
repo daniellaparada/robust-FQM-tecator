@@ -1,0 +1,4 @@
+- source: ejemplo-computo-tecator-robustFQM.qmd
+  quarto-pub:
+    - id: 84677f36-9eb1-4186-9e0c-63d6722e08ae
+      url: 'https://daniellaparada.quarto.pub/robust-fqm'
