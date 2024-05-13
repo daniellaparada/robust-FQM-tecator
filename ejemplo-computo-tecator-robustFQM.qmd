@@ -1,0 +1,343 @@
+---
+title: "Robust FQM"
+author: "Daniela Parada"
+subtitle: "Ejemplo de cómputo"
+date: 2024-05-18
+format:
+  revealjs: 
+    slide-number: true
+    preview-links: auto
+    logo: logo-IC.png
+    theme: default
+    footer: "Jornada de Temas de Investigación en Estadística Matemática"
+    multiplex: true
+    embed-resources: true
+width: 1200
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ejemplo de cómputo {auto-animate="true" transition="slide"}
+
+## Librerías {.scrollable auto-animate="true"}
+```{r, warning=FALSE, message=FALSE}
+library('fda')        # herramientas para tratar datos funcionales  
+library('robustbase') # lmrob 
+library(fda.usc)      # dataset + herramientas como fda (derivada, por ejemplo)
+library(lattice)      # gráficos
+library(gdata)        # uppertriangle
+```
+
+## Datos de tecator en fda.usc {.scrollable auto-animate="true"}
+```{r, warning=FALSE, message=FALSE, fig.align='center'}
+datos <- data(tecator)
+# Viene en un fdata, es necesario para usar fdata.deriv
+absorp <- tecator$absorp.fdata
+# fdata.deriv aproxima la derivada primera usando splines
+absorp1 <- fdata.deriv(absorp, nderiv = 1)
+# Plot de los datos
+plot(absorp)   # espectro de absorbancias
+plot(absorp1)  # derivada primera de las absorbancias
+```
+
+# Modelo funcional cuadrático {.scrollable auto-animate="true"}
+$$
+y=\alpha_0+\left\langle\beta_0, X\right\rangle+\left\langle X, \Upsilon_0 X\right\rangle+\sigma_0 \varepsilon,
+$$
+con $\sigma_0>0$ el parámetro de escala del error, desconocido, y $\Upsilon_0: L^2(\mathcal{I}) \rightarrow L^2(\mathcal{I})$ un operador lineal autoadjunto y Hilbert-Schmidt correspondiente al término cuadrático.
+
+# Propuesta robusta {auto-animate="true" transition="slide"}
+
+## 0) Preparamos los datos {.scrollable auto-animate="true"}
+
+```{r, warning=FALSE, message=FALSE}
+y   <- tecator$y$Fat	              # vector de respuestas y_i
+
+ab  <- tecator$absorp.fdata         # X
+ab1 <- fdata.deriv(ab, nderiv = 1)  # primera derivada X
+
+t   <- ab$argvals                   # grilla de t's con t_j \in [850, 1050]
+nn  <- length(y)                    # tamaño de muestra n
+
+X   <- ab1$data                     # matriz con los X_ij = X_i(t_j): 
+                                    # cada X_i es observada en cada t_j
+
+dt  <- t[2]-t[1]                    # delta de la grilla: dt = t_{j+1}-t_j = cte
+lt  <- length(t)                    # J: cantidad de t_j de la grilla
+```
+
+Tenemos una muestra de `r nn` observaciones. Tomamos como observaciones a la derivada del espectro de absorbancia.
+
+## 1) Estimamos las direcciones principales esféricas {.scrollable auto-animate="true"}
+$$
+\begin{aligned}
+& \widehat{\mu}_{\mathrm{SM}}=\operatorname{argmin}_\theta \sum_{i=1}^n\left(\left\|X_i-\theta\right\|-\left\|X_i\right\|\right) \\
+& \widehat{\Gamma}^S=\frac{1}{n} \sum_{i=1}^n \mathbb{E}\left\{\frac{\left(X_i-\widehat{\mu}_{\mathrm{SM}}\right) \otimes\left(X_i-\widehat{\mu}_{\mathrm{SM}}\right)}{\left\|X_i-\widehat{\mu}_{\mathrm{SM}}\right\|^2}\right\}
+\end{aligned}
+$$
+
+Fijamos $p=4$ y obtenemos $\widehat{\phi}_j$ para $1 \leq j \leq p$ como las autofunciones de $\widehat{\Gamma}^{\mathrm{S}}$.
+
+## 1) Cómputo {.smaller .scrollable auto-animate="true"}
+### Centramos los datos usando un centro robusto
+```{r, warning=FALSE, message=FALSE}
+centro  <- pcaPP::l1median(X)       # mediana espacial de los datos
+Xcenter <- t(t(X) - centro)         # datos centrados con la mediana espacial
+```
+
+### Computamos las componentes principales esféricas
+```{r, warning=FALSE, message=FALSE}
+pc_esf <- function(xx, dt,  auto) {
+  ## Spherical data
+  ww <- sqrt(rowSums(xx^2))
+  ww <- replace(ww, which(ww <= 1e-50), 1e-50)
+  xe <- xx / ww
+  ## Eigen
+  nn       <- nrow(xx)
+  mm       <- colMeans(xe)
+  cov_esf  <- crossprod(xe) / nn
+  cov_dec  <- eigen(cov_esf, symmetric = TRUE) 
+  pc_esf   <- cov_dec$vectors
+  av_esf   <- cov_dec$values
+  norms    <- sqrt(colSums(pc_esf^2) * dt)
+  pc_esf_n <- pc_esf %*% diag(1 / norms)
+  ## Sort by spherical eigenvalues 
+  if (auto) {
+    av_esf   <- apply(xx %*% pc_esf_n * dt, 2, s_scale)^2
+    ordendec <- order(av_esf, decreasing = TRUE)
+    pc_esf_n <- pc_esf_n[, ordendec]
+    av_esf  <- av_esf[ordendec]
+  }
+  return(list(autofun=pc_esf_n, autoval=av_esf))
+}
+s_scale <- function(u, b = 0.5 , cc = 1.54764) {
+  ## find the scale, full iterations
+  max.it <- 200
+  sc     <- median(abs(u)) / 0.6745
+  i      <- 0
+  eps    <- 1e-20
+  ## magic number alert
+  err <- 1
+  while(((i <- i + 1) < max.it) && (err > eps)) {
+    sc2 <- sqrt(sc^2 * mean(Mchi(u / sc, cc, psi = 'bisquare')) / b)
+    err <- abs(sc2 / sc - 1)
+    sc  <- sc2
+  }
+  return(sc)
+}
+
+# Computamos las componentes principales esféricas
+phi_hat    <- pc_esf(Xcenter, dt, auto = TRUE)$autofun  # Coeficientes de las autofunciones en cada t_j
+lambda_hat <- pc_esf(Xcenter, dt, auto = TRUE)$autoval  # Autovalores asociados a las autofunciones
+```
+
+Ya tenemos las $\widehat{\phi}_j$, ahora necesitamos fijar $p$, idealmente pequeño, pero con alto porcentaje de varianza muestral explicada.
+
+### Elegimos $p$
+
+```{r, warning=FALSE, message=FALSE, fig.align='center'}
+p <- 4                                   # cantidad de autofunciones a considerar
+cumsum(lambda_hat[1:p])/sum(lambda_hat)  # 0.9841754 de var mtral explicada
+
+cov_dec <- matrix(NA, ncol=p, nrow=lt)
+cov_dec[, 1:p] <- phi_hat[, 1:p]
+
+# dim(cov_dec)
+# plot(t, cov_dec[,1], type="l", col="blue", lwd=2, ylab=expression(hat(phi[1])))
+```
+
+Ya tenemos $\widehat{\phi}_j$ para $1 \leq j \leq 4$.
+
+## 2) Estimamos los parámetros del modelo en forma robusta {.smaller .scrollable auto-animate="true"}
+$$
+\begin{aligned}
+\mathbf{y} & =\left(y_1, y_2, \ldots, y_n\right)^{\mathrm{T}} \in \mathbb{R}^n, \\
+\mathbf{b} & =\left(b_1, b_2, \ldots, b_p\right)^{\mathrm{T}} \in \mathbb{R}^p, \\
+\mathbf{u} & =\left(u_{j \ell}\right)=\operatorname{vech}\left(\left\{\left(2-\mathbf{1}_{j=\ell}\right) v_{j \ell}\right\}^{\mathrm{T}}\right)_{1 \leq j \leq \ell \leq p} \in \mathbb{R}^{p \times(p+1) / 2}, \\
+\mathbf{x}_i & =\left(\widehat{x}_{i 1}, \widehat{x}_{i 2}, \cdots, \widehat{x}_{i p}\right)^{\mathrm{T}}, \mathbf{z}_i=\operatorname{vech}\left(\left\{\widehat{x}_{i j} \widehat{x}_{i \ell}\right\}^{\mathrm{T}}\right)_{1 \leq j, \ell \leq p}, \\
+\widehat{\mathbf{Z}} & =\left(\begin{array}{c|c|c}
+1 & \mathbf{x}_1^{\mathrm{T}} & \mathbf{z}_1^{\mathrm{T}} \\
+1 & \mathbf{x}_2^{\mathrm{T}} & \mathbf{z}_2^{\mathrm{T}} \\
+\vdots & \vdots & \vdots \\
+1 & \mathbf{x}_n^{\mathrm{T}} & \mathbf{z}_n^{\mathrm{T}}
+\end{array}\right) \in \mathbb{R}^{1+p+p \times(p+1) / 2} .
+\end{aligned}
+$$
+
+Los candidatos son:
+$$
+\begin{aligned}
+& \beta_{\mathbf{b}}=\sum_{j=1}^p b_j \widehat{\phi}_j \\
+& \Upsilon_{\mathbf{u}}=\sum_{j=1}^p \sum_{\ell=j}^p v_{j \ell} \widehat{\phi}_j \otimes \widehat{\phi}_{\ell}
+\end{aligned}
+$$
+
+## 2) Cómputo {.smaller .scrollable auto-animate="true"}
+#### Armamos: $\widehat{x}_{ij} = \left\langle X_i , \widehat{\phi}_j \right\rangle$
+```{r, warning=FALSE, message=FALSE}
+# xx_coef = \hat{x}_ij = < X_i , \hat{phi}_j >
+xx_coef <- X %*% cov_dec * dt
+```
+
+#### Armamos: $\mathbf{z}_i=\operatorname{vech}\left(\left\{\widehat{x}_{i j} \widehat{x}_{i \ell}\right\}^{\mathrm{T}}\right)$
+```{r, warning=FALSE, message=FALSE}
+# vector zeta_i = half vect {\hat{x}_ij \hat{x}_il} 
+dim_z  <- p*(p+1)/2
+zeta   <- matrix(NA, nn, dim_z)
+for (i in 1:nn){
+    x_aux <- xx_coef[i,]
+    z_aux <- xx_coef[i,] %*% t(xx_coef[i,])
+    zeta[i,] <- upperTriangle(z_aux, diag=TRUE, byrow=TRUE)
+}
+```
+
+#### Armamos la matriz de diseño $\widehat{\mathbf{Z}}$
+```{r, warning=FALSE, message=FALSE}
+# matriz de diseño para estimar como si se tratara de un modelo lineal
+Z <- cbind(xx_coef, zeta)
+```
+
+#### Hacemos el ajuste robusto
+```{r, warning=FALSE, message=FALSE}
+# tunning del lmrob
+control <- lmrob.control(trace.level = 0,         
+                         nResample   = 5000,      
+                         tuning.psi  = 3.443689,  # para 85% eff
+                         subsampling = 'simple',  
+                         rel.tol     = 1e-5,      
+                         refine.tol  = 1e-5,      
+                         k.max       = 2e3,       
+                         maxit.scale = 2e3,       
+                         max.it      = 2e3)       
+
+# Ajuste robusto
+fit  <- lmrob(y ~ Z, control = control)
+if (fit$init.S$converged) {
+    cf <- fit$coef  #incluye ordenada al origen en posicion 1
+    ss <- fit$scale
+    vv <- sum(Mpsi(fit$res / ss,
+                   cc  = control$tuning.psi,
+                   psi = control$psi, deriv = -1))
+    cv <- fit$converged
+    
+  } else {
+    stop('No hay convergencia del S-estimador. Se descarta la muestra.')
+  }
+converge = cv
+sigma = ss
+```
+
+#### Estimaciones de los coeficientes
+```{r, warning=FALSE, message=FALSE}
+# Parámetros estimados: acá están las estimaciones de alpha, b_j y v_jl (para reconstruir los u_jl)
+param <- cf[-1]               # todos, menos la estimación de la ordenada
+a_hat <- cf[1]                # en las restantes, las \hat{v}_jl
+b_hat <- param[1:p]           # en las primeras p posiciones, los \hat{b}_j
+v_hat <- param[-(1:p)]        # en las restantes, las \hat{v}_jl
+```
+ 
+## 3) Reconstruimos las estimaciones de los parámetros $\alpha$, $\beta$, $\upsilon$ {.scrollable auto-animate="true"}
+$$
+\begin{aligned}
+& \widehat{\alpha}=\widehat{a} \\
+& \widehat{\beta}=\sum_{j=1}^p \widehat{b}_j \widehat{\phi}_j \\
+& \widehat{\Upsilon}=\sum_{j=1}^p \widehat{u}_{j j} \widehat{\phi}_j \otimes \widehat{\phi}_j+\sum_{j \geq 1}^p \sum_{\ell>j}^p \frac{1}{2} \widehat{u}_{j \ell}\left(\widehat{\phi}_j \otimes \widehat{\phi}_{\ell}+\widehat{\phi}_{\ell} \otimes \widehat{\phi}_j\right)
+\end{aligned}
+$$
+con $\widehat{u}_{j \ell}=\left(2-\mathbb{1}_{j=\ell}\right) \widehat{v}_{j \ell}$.
+
+## 3) Cómputo {.smaller .scrollable auto-animate="true"}
+#### Construimos $\widehat{\alpha}$
+```{r, warning=FALSE, message=FALSE}
+# \hat{\alpha} --> escalar
+alpha_est <- a_hat
+```
+
+#### Construimos $\widehat{\beta}$
+```{r, warning=FALSE, message=FALSE}
+# \hat{\beta} (nos va a quedar un vector de dim lt 
+# con los valores de beta est en la grilla) --> curva
+beta_est  <- cov_dec %*% b_hat
+```
+
+#### Construimos $\widehat{\upsilon}$
+```{r, warning=FALSE, message=FALSE}
+# \hat{\upsilon} (nos va a quedar un vector de dim lt*lt
+# con los valores de upsilo est en grilla*grilla) --> superficie
+
+# Reconstruimos \hat{u}_jl para construir \hat{\upsilon}
+u_hat <- matrix(NA, p, p)
+
+# Completamos el triang sup y la diagonal con los estimados de v_jl
+upperTriangle(u_hat, diag=TRUE, byrow=TRUE) <- v_hat 
+
+# Separamos el triang sup (sin diag) y dividimos por 2 para recuperar los estim de u_jl
+aux <- upperTriangle(u_hat, diag=FALSE, byrow=TRUE)/2 
+
+# Pisamos el triang sup (sin diag) con esos coef
+upperTriangle(u_hat, diag=FALSE,byrow=TRUE) <- aux 
+
+# Rellenamos el triang inf (sin diag) con esos coef
+lowerTriangle(u_hat, diag=FALSE,byrow=FALSE) <- aux 
+
+# Reconstruimos las estimación del operador cuadrático
+# suma_{i} u_hat[i,i] phi_i(t) phi_i (s)  + 2 suma_{i \ne j} u_hat[i,j] phi_i(t) phi_j (s)
+# sobre los puntos de la grilla que son los que estan en cov_dec[,i] y cov_dec[,j]
+# de esa manera de obtiene una matriz de lt*lt 
+upsilon_est <- cov_dec %*% u_hat %*% t(cov_dec) 
+upsilon_est <- (upsilon_est + t(upsilon_est))/2
+
+# Verificamos
+# v_hat
+# u_hat
+```
+
+## 4) Graficamos las estimaciones de $\beta$ y $\upsilon$ {.scrollable auto-animate="true"}
+### $\widehat{\beta}$
+```{r, echo = FALSE, warning=FALSE, message=FALSE, fig.align='center'}
+plot(t, beta_est , type = "l", lwd=3,xlab = "Wavelength", pch = 10,
+     col = "steelblue", ylab = expression(hat(beta)))
+```
+
+### $\widehat{\upsilon}$
+```{r, include=FALSE}
+ene.col = 101
+colores = rainbow(ene.col, s = 1, v = 1, start = 0, end = max(1, ene.col - 1)/ene.col, alpha = 0.7)
+eme = min(upsilon_est)
+EME = max(upsilon_est)
+donde = seq(eme, EME,length=ene.col)
+```
+
+```{r, echo = FALSE, warning=FALSE, message=FALSE, fig.align='center'}
+# \hat{\upsilon}
+wireframe(upsilon_est, scales = list(arrows = FALSE),   
+          xlab="t", ylab="s",zlab=" ", cex=0.8, row.values=t,
+          column.values=t, aspect = c(1,1), screen=list(z= 30, x=-70), 
+          colorkey = TRUE, at=donde, col.regions=colores, shade=TRUE, alpha.regions=0.7)
+```
+
+## 5) Predichos, residuos y boxplot {.scrollable auto-animate="true"}
+
+#### Reconstruimos la predicción
+```{r, warning=FALSE, message=FALSE, fig.align='center'}
+predichos <- alpha_est + xx_coef %*% b_hat + diag(xx_coef %*% u_hat %*% t(xx_coef))
+```
+
+#### Residuos
+```{r, warning=FALSE, message=FALSE, fig.align='center'}
+# Residuos
+residuos  <- y - predichos
+
+# Gráficos
+plot(predichos, residuos, xlab=expression(hat(y[i])), 
+     ylab=expression(r[i]), cex=1.3, cex.lab=1.3)
+
+names(residuos) <- 1:length(residuos)
+atipicos <- as.numeric(names(boxplot(residuos)$out))
+boxplot(residuos, out.col="red")
+boxplot(residuos)$out
+```
+
+# ¡Gracias! {background="#F3F3F3" transition="slide"}
